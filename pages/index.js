@@ -320,16 +320,22 @@ export default function Home() {
                   </div>
                   {originalImage && (
                     <div className="relative group">
-                      <div className={`border rounded-2xl overflow-hidden shadow-lg transition-colors duration-300 ${
-                        darkMode ? 'border-gray-600 bg-gray-900' : 'border-gray-200 bg-white'
-                      }`}>
+                      <div
+                        className={`border rounded-2xl overflow-hidden shadow-lg transition-colors duration-300 ${darkMode ? 'border-gray-600 bg-gray-900' : 'border-gray-200 bg-white'} cursor-pointer`}
+                        onClick={() => openFullscreen(originalImage, 'Original')}
+                        tabIndex={0}
+                        role="button"
+                        aria-label="Preview original image full screen"
+                      >
                         <img
                           src={originalImage}
                           alt="Original"
-                          className="w-full h-auto max-h-80 object-contain bg-gray-50 dark:bg-gray-800"
+                          className="w-full h-auto max-h-80 object-contain bg-gray-50 dark:bg-gray-800 select-none pointer-events-none"
                         />
                         <button
-                          onClick={() => openFullscreen(originalImage, 'Original')}
+                          type="button"
+                          tabIndex={-1}
+                          onClick={e => { e.stopPropagation(); openFullscreen(originalImage, 'Original'); }}
                           className="absolute top-3 right-3 p-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-white dark:hover:bg-gray-700"
                         >
                           <svg className="w-4 h-4 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -376,16 +382,22 @@ export default function Home() {
                     </div>
                   ) : enhancedImage ? (
                     <div className="relative">
-                      <div className={`border border-green-200 dark:border-green-800 rounded-2xl overflow-hidden shadow-lg transition-colors duration-300 ${
-                        darkMode ? 'bg-gray-900' : 'bg-white'
-                      }`}>
+                      <div
+                        className={`border border-green-200 dark:border-green-800 rounded-2xl overflow-hidden shadow-lg transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-white'} cursor-pointer`}
+                        onClick={() => openFullscreen(enhancedImage, 'Enhanced')}
+                        tabIndex={0}
+                        role="button"
+                        aria-label="Preview enhanced image full screen"
+                      >
                         <img
                           src={enhancedImage}
                           alt="Enhanced"
-                          className="w-full h-auto max-h-80 object-contain bg-gray-50 dark:bg-gray-800"
+                          className="w-full h-auto max-h-80 object-contain bg-gray-50 dark:bg-gray-800 select-none pointer-events-none"
                         />
                         <button
-                          onClick={() => openFullscreen(enhancedImage, 'Enhanced')}
+                          type="button"
+                          tabIndex={-1}
+                          onClick={e => { e.stopPropagation(); openFullscreen(enhancedImage, 'Enhanced'); }}
                           className="absolute top-3 right-3 p-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-white dark:hover:bg-gray-700"
                         >
                           <svg className="w-4 h-4 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
