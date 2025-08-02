@@ -180,7 +180,6 @@ export default function Home() {
               </div>
               <div>
                 <h1 className="text-xl font-bold">LIME Enhancement</h1>
-                <p className="text-sm text-gray-600 dark:text-gray-400">AI-Powered Image Enhancement</p>
               </div>
             </div>
             
@@ -215,7 +214,7 @@ export default function Home() {
               Transform Your Low-Light Images
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-              Upload your dark or underexposed images and watch them transform into clear, vibrant photos using our advanced AI enhancement technology.
+              Upload your dark or underexposed images and watch them transform into clear, vibrant photos using our advanced model.
             </p>
           </div>
           
