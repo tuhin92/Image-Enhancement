@@ -1,113 +1,134 @@
 #!/usr/bin/env python3
 """
-LIME (Low-Light Image Enhancement) Algorithm Implementation
-This script enhances low-light images using the LIME algorithm.
+Enhanced LIME (Low-Light Image Enhancement) Algorithm Implementation
+This script enhances low-light images using an improved LIME algorithm.
 """
 
 import cv2
 import numpy as np
 import sys
 import os
-from PIL import Image
+import logging
 import argparse
+from PIL import Image
 
-def guided_filter(guide, src, radius, eps):
+# Configure logging for better debugging and monitoring
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+def estimate_illumination(img, method='max_rgb', sigma=3):
     """
-    Apply guided filter to the image.
-    
-    Args:
-        guide: Guidance image
-        src: Source image
-        radius: Filter radius
-        eps: Regularization parameter
-    
-    Returns:
-        Filtered image
+    Estimate the illumination map using different methods and apply soft smoothing.
+    Options for 'method': 'max_rgb', 'luminosity', 'gray'.
     """
-    # Use OpenCV's guided filter if available
-    if hasattr(cv2, 'ximgproc'):
-        return cv2.ximgproc.guidedFilter(guide, src, radius, eps)
+    img = img.astype(np.float32) / 255.0
+
+    if method == 'max_rgb':
+        illumination = np.max(img, axis=2)
+    elif method == 'luminosity':
+        illumination = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)[:, :, 2]
+    elif method == 'gray':
+        illumination = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
     else:
-        # Fallback implementation if ximgproc is not available
-        return cv2.bilateralFilter(src, radius, eps, eps)
+        raise ValueError(f"Unknown method: {method}. Available methods are: 'max_rgb', 'luminosity', 'gray'.")
 
-def estimate_illumination_map(img, alpha=0.15, beta=0.08):
-    """
-    Estimate the illumination map from the input image.
-    
-    Args:
-        img: Input image (BGR format)
-        alpha: Parameter for illumination estimation
-        beta: Parameter for illumination estimation
-    
-    Returns:
-        Estimated illumination map
-    """
-    # Convert to LAB color space
-    lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
-    l_channel = lab[:, :, 0]
-    
-    # Normalize L channel
-    l_norm = l_channel.astype(np.float32) / 255.0
-    
-    # Estimate illumination map using the maximum value in RGB channels
-    b, g, r = cv2.split(img)
-    max_rgb = np.maximum(np.maximum(r, g), b).astype(np.float32) / 255.0
-    
-    # Apply guided filter to smooth the illumination map
-    illumination = guided_filter(l_norm, max_rgb, 40, 0.001)
-    
-    # Apply gamma correction
-    illumination = np.power(illumination, alpha)
-    
-    # Add small constant to avoid division by zero
-    illumination = np.maximum(illumination, beta)
-    
+    # Optionally, reduce the smoothing impact
+    illumination = cv2.GaussianBlur(illumination, (5, 5), sigma)
+
+    # Normalize illumination map (to prevent extreme brightness shifts)
+    illumination = np.clip(illumination, 0.1, 1.0)
+
     return illumination
 
-def enhance_low_light_image(img, alpha=0.15, beta=0.08, gamma=0.8):
+def sharpen_image(img, alpha=1.5, beta=0.5):
     """
-    Enhance low-light image using LIME algorithm.
-    
-    Args:
-        img: Input image (BGR format)
-        alpha: Parameter for illumination estimation
-        beta: Parameter for illumination estimation
-        gamma: Gamma correction parameter
-    
-    Returns:
-        Enhanced image
+    Apply sharpening using an unsharp mask or custom kernel.
     """
-    # Estimate illumination map
-    illumination = estimate_illumination_map(img, alpha, beta)
-    
-    # Normalize input image
-    img_norm = img.astype(np.float32) / 255.0
-    
-    # Enhance image by dividing by illumination map
-    enhanced = img_norm / np.stack([illumination] * 3, axis=2)
-    
-    # Apply gamma correction
-    enhanced = np.power(enhanced, gamma)
-    
-    # Clip values to [0, 1] range
-    enhanced = np.clip(enhanced, 0, 1)
-    
-    # Convert back to uint8
-    enhanced = (enhanced * 255).astype(np.uint8)
-    
+    kernel = np.array([[-1, -1, -1], [-1, 9, -1], [-1, -1, -1]])  # Sharpening kernel
+    sharpened = cv2.filter2D(img, -1, kernel)
+    return sharpened
+
+def refine_illumination(illumination, radius=15, eps=1e-3):
+    """
+    Use guided filtering for structure-preserving smoothing with adaptive radius and eps.
+    """
+    try:
+        refined_illumination = cv2.ximgproc.guidedFilter(
+            guide=illumination.astype(np.float32),
+            src=illumination.astype(np.float32),
+            radius=radius,
+            eps=eps
+        )
+        return np.clip(refined_illumination, 0.1, 1.0)
+    except AttributeError:
+        # Fallback if ximgproc is not available
+        logging.warning("ximgproc not available, using bilateral filter as fallback")
+        refined_illumination = cv2.bilateralFilter(illumination.astype(np.float32), 15, 75, 75)
+        return np.clip(refined_illumination, 0.1, 1.0)
+
+def enhance_image(img, illumination, gamma=0.85):
+    """
+    Realistic enhancement by applying adaptive gamma correction.
+    """
+    img = img.astype(np.float32) / 255.0
+    enhanced = np.zeros_like(img)
+
+    # Apply gamma correction for a smoother, more natural brightness boost
+    for i in range(3):
+        enhanced[:, :, i] = (img[:, :, i] / illumination) ** gamma
+
+    # Normalize and scale back to valid image range
+    enhanced = np.clip(enhanced * 255.0, 0, 255).astype(np.uint8)
+
+    # Optionally sharpen the image
+    enhanced = sharpen_image(enhanced)
+
     return enhanced
+
+def lime_enhance(image_path, output_path, illumination_method='max_rgb', gamma=0.85, sigma=3, radius=15, eps=1e-3):
+    """
+    Apply LIME enhancement to an image with improved realism and flexibility.
+    """
+    try:
+        img = cv2.imread(image_path)
+        if img is None:
+            logging.warning(f"Skipping {image_path} - Unable to load image.")
+            return False
+
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+        # Step 1: Estimate Illumination
+        illumination = estimate_illumination(img, method=illumination_method, sigma=sigma)
+
+        # Step 2: Refine Illumination using Guided Filtering
+        refined_illumination = refine_illumination(illumination, radius=radius, eps=eps)
+
+        # Step 3: Enhance Image using Gamma Correction and Sharpening
+        enhanced_img = enhance_image(img, refined_illumination, gamma=gamma)
+
+        # Save the output
+        output_image = Image.fromarray(enhanced_img)
+        output_image.save(output_path)
+        logging.info(f"Enhanced Image Saved: {output_path}")
+        return True
+
+    except Exception as e:
+        logging.error(f"Error processing {image_path}: {e}")
+        return False
 
 def main():
     """
     Main function to process command line arguments and enhance image.
     """
-    parser = argparse.ArgumentParser(description='LIME Low-Light Image Enhancement')
+    parser = argparse.ArgumentParser(description='Enhanced LIME Low-Light Image Enhancement')
     parser.add_argument('input_path', help='Path to input image')
     parser.add_argument('output_path', help='Path to save enhanced image')
-    parser.add_argument('--alpha', type=float, default=0.15, help='Alpha parameter (default: 0.15)')
-    parser.add_argument('--beta', type=float, default=0.08, help='Beta parameter (default: 0.08)')
-    parser.add_argument('--gamma', type=float, default=0.8, help='Gamma correction (default: 0.8)')
+    parser.add_argument('--method', type=str, default='max_rgb', 
+                       choices=['max_rgb', 'luminosity', 'gray'],
+                       help='Illumination estimation method (default: max_rgb)')
+    parser.add_argument('--gamma', type=float, default=0.85, help='Gamma correction (default: 0.85)')
+    parser.add_argument('--sigma', type=float, default=3, help='Gaussian blur sigma (default: 3)')
+    parser.add_argument('--radius', type=int, default=15, help='Guided filter radius (default: 15)')
+    parser.add_argument('--eps', type=float, default=1e-3, help='Guided filter epsilon (default: 1e-3)')
     
     args = parser.parse_args()
     
@@ -128,22 +149,21 @@ def main():
         print(f"Image shape: {img.shape}")
         
         # Enhance the image
-        print("Enhancing image using LIME algorithm...")
-        enhanced_img = enhance_low_light_image(
-            img, 
-            alpha=args.alpha, 
-            beta=args.beta, 
-            gamma=args.gamma
+        print("Enhancing image using improved LIME algorithm...")
+        success = lime_enhance(
+            args.input_path, 
+            args.output_path,
+            illumination_method=args.method,
+            gamma=args.gamma,
+            sigma=args.sigma,
+            radius=args.radius,
+            eps=args.eps
         )
-        
-        # Save enhanced image
-        print(f"Saving enhanced image to: {args.output_path}")
-        success = cv2.imwrite(args.output_path, enhanced_img)
         
         if success:
             print("Image enhancement completed successfully!")
         else:
-            print(f"Error: Could not save enhanced image to '{args.output_path}'")
+            print(f"Error: Could not enhance image")
             sys.exit(1)
             
     except Exception as e:

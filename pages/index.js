@@ -98,6 +98,17 @@ export default function Home() {
     }
   };
 
+  const handleDownload = () => {
+    if (enhancedImage) {
+      const link = document.createElement('a');
+      link.href = enhancedImage;
+      link.download = 'enhanced-image.jpg';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       <Head>
@@ -277,14 +288,28 @@ export default function Home() {
                       </div>
                     </div>
                   ) : enhancedImage ? (
-                    <div className="border-2 border-green-200 rounded-xl overflow-hidden shadow-lg">
-                      <img
-                        src={enhancedImage}
-                        alt="Enhanced"
-                        className="w-full h-auto max-h-96 object-contain bg-gray-50"
-                      />
+                    <div className="relative">
+                      <div className="border-2 border-green-200 rounded-xl overflow-hidden shadow-lg">
+                        <img
+                          src={enhancedImage}
+                          alt="Enhanced"
+                          className="w-full h-auto max-h-96 object-contain bg-gray-50"
+                        />
+                      </div>
                       <div className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
                         Enhanced
+                      </div>
+                      {/* Download Button */}
+                      <div className="mt-4">
+                        <button
+                          onClick={handleDownload}
+                          className="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 shadow-lg hover:shadow-xl"
+                        >
+                          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                          Download Enhanced Image
+                        </button>
                       </div>
                     </div>
                   ) : (
@@ -309,12 +334,12 @@ export default function Home() {
               <svg className="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              About LIME Algorithm
+              About Enhanced LIME Algorithm
             </h3>
             <p className="text-gray-600 text-sm leading-relaxed">
-              The LIME (Low-Light Image Enhancement) algorithm uses advanced computer vision techniques to enhance 
-              underexposed images. It estimates illumination maps and applies guided filtering to produce clear, 
-              well-lit results while preserving image details and reducing noise.
+              This enhanced LIME algorithm uses advanced computer vision techniques including multiple illumination estimation methods, 
+              guided filtering for structure preservation, adaptive gamma correction, and image sharpening to produce superior results 
+              with better realism and detail preservation.
             </p>
           </div>
         </div>
