@@ -256,8 +256,7 @@ export default function Home() {
             </h2>
             <div className="mx-auto h-0.5 w-32 bg-blue-500/60 rounded-full mb-6" />
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
-              Enhance low-light and underexposed images with advanced AI technology
-              powered by our{" "}
+              Low-Light image enhancement by {" "}
               <span className="font-semibold text-blue-600 dark:text-blue-300">
                 Hybrid LIME and Zero-DCE Models
               </span>
