@@ -883,14 +883,14 @@ export default function Home() {
                         <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
                           darkMode ? "bg-blue-600/30" : "bg-blue-200"
                         }`}>
-                          <svg className="w-4 h-4 text-purple-600 dark:text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+                          <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                           </svg>
                         </div>
                       </div>
                       <div>
-                        <p className="text-sm font-semibold dark:text-white">Intelligent Illumination</p>
-                        <p className="text-xs text-gray-600 dark:text-gray-400">Multiple estimation methods for optimal brightness</p>
+                        <p className="text-sm font-semibold dark:text-white">Brightness Enhancement</p>
+                        <p className="text-xs text-gray-600 dark:text-gray-400">Advanced illumination optimization</p>
                       </div>
                     </div>
                     
@@ -899,14 +899,14 @@ export default function Home() {
                         <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
                           darkMode ? "bg-indigo-600/30" : "bg-indigo-200"
                         }`}>
-                          <svg className="w-4 h-4 text-pink-600 dark:text-pink-400" fill="currentColor" viewBox="0 0 20 20">
+                          <svg className="w-4 h-4 text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                           </svg>
                         </div>
                       </div>
                       <div>
-                        <p className="text-sm font-semibold dark:text-white">Deep Learning Power</p>
-                        <p className="text-xs text-gray-600 dark:text-gray-400">Zero-reference curve estimation technology</p>
+                        <p className="text-sm font-semibold dark:text-white">Improved Contrast</p>
+                        <p className="text-xs text-gray-600 dark:text-gray-400">Dynamic range enhancement</p>
                       </div>
                     </div>
                     
@@ -921,8 +921,8 @@ export default function Home() {
                         </div>
                       </div>
                       <div>
-                        <p className="text-sm font-semibold dark:text-white">Structure Preservation</p>
-                        <p className="text-xs text-gray-600 dark:text-gray-400">Guided filtering maintains image details</p>
+                        <p className="text-sm font-semibold dark:text-white">Noise Reduction</p>
+                        <p className="text-xs text-gray-600 dark:text-gray-400">Smart denoising algorithms</p>
                       </div>
                     </div>
                     
@@ -931,14 +931,62 @@ export default function Home() {
                         <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
                           darkMode ? "bg-indigo-600/30" : "bg-indigo-200"
                         }`}>
-                          <svg className="w-4 h-4 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                          <svg className="w-4 h-4 text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                           </svg>
                         </div>
                       </div>
                       <div>
-                        <p className="text-sm font-semibold dark:text-white">Natural Color Rendition</p>
-                        <p className="text-xs text-gray-600 dark:text-gray-400">Adaptive gamma correction for realism</p>
+                        <p className="text-sm font-semibold dark:text-white">Color Correction</p>
+                        <p className="text-xs text-gray-600 dark:text-gray-400">Natural color balance restoration</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start space-x-3">
+                      <div className="flex-shrink-0 mt-1">
+                        <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                          darkMode ? "bg-blue-600/30" : "bg-blue-200"
+                        }`}>
+                          <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold dark:text-white">Exposure Equalization</p>
+                        <p className="text-xs text-gray-600 dark:text-gray-400">Balanced light distribution</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start space-x-3">
+                      <div className="flex-shrink-0 mt-1">
+                        <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                          darkMode ? "bg-indigo-600/30" : "bg-indigo-200"
+                        }`}>
+                          <svg className="w-4 h-4 text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold dark:text-white">Reduced Artifacts</p>
+                        <p className="text-xs text-gray-600 dark:text-gray-400">Minimized processing artifacts</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start space-x-3">
+                      <div className="flex-shrink-0 mt-1">
+                        <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                          darkMode ? "bg-blue-600/30" : "bg-blue-200"
+                        }`}>
+                          <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold dark:text-white">Structural Detail Preservation</p>
+                        <p className="text-xs text-gray-600 dark:text-gray-400">Maintains fine image details</p>
                       </div>
                     </div>
                   </div>
