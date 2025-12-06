@@ -163,7 +163,9 @@ export default function Home() {
   return (
     <div
       className={`min-h-screen transition-colors duration-300 ${
-        darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
+        darkMode 
+          ? "bg-slate-950 text-white" 
+          : "bg-slate-50 text-gray-900"
       }`}
     >
       <Head>
@@ -176,39 +178,47 @@ export default function Home() {
       </Head>
 
       {/* Header with Theme Toggle */}
-      <header className="border-b border-gray-200 dark:border-gray-700">
-        <div className="container mx-auto px-6 py-4">
+      <header className={`backdrop-blur-lg border-b transition-colors duration-300 ${
+        darkMode 
+          ? "bg-slate-900/80 border-slate-800" 
+          : "bg-white/90 border-slate-200 shadow-sm"
+      }`}>
+        <div className="container mx-auto px-6 py-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div
-                className={`inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-lg`}
-              >
-                <svg
-                  className="w-6 h-6 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  />
-                </svg>
+              <div className="relative group">
+                <div className="absolute inset-0 bg-sky-500 rounded-2xl blur opacity-60 group-hover:opacity-90 transition duration-300"></div>
+                <div className="relative inline-flex items-center justify-center w-12 h-12 bg-sky-600 rounded-2xl shadow-lg">
+                  <svg
+                    className="w-7 h-7 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 10V3L4 14h7v7l9-11h-7z"
+                    />
+                  </svg>
+                </div>
               </div>
               <div>
-                <h1 className="text-xl font-bold">Low Light Image Enhancement</h1>
+                <h1 className="text-xl font-bold text-slate-900 dark:text-white">
+                  Low Light Image Enhancement
+                </h1>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Hybrid LIME + Zero-DCE Model</p>
               </div>
             </div>
 
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
-              className={`p-3 rounded-xl transition-all duration-200 ${
+              className={`p-3 rounded-xl transition-all duration-200 hover:scale-105 border ${
                 darkMode
-                  ? "bg-gray-800 hover:bg-gray-700 text-yellow-400"
-                  : "bg-gray-100 hover:bg-gray-200 text-gray-600"
+                  ? "bg-slate-800 border-slate-700 text-yellow-300 hover:bg-slate-700"
+                  : "bg-white border-slate-200 text-slate-700 hover:bg-slate-100"
               }`}
             >
               {darkMode ? (
@@ -237,87 +247,42 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="container mx-auto px-6 py-8">
-        <div className="max-w-6xl mx-auto">
+      <main className="container mx-auto px-6 py-12">
+        <div className="max-w-7xl mx-auto">
           {/* Welcome Section */}
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4 dark:text-white">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold mb-4 text-sky-400 dark:text-cyan-300 tracking-tight">
               Transform Your Low-Light Images
             </h2>
-            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
+            <div className="mx-auto h-0.5 w-32 bg-sky-500/60 rounded-full mb-6" />
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
               Upload your dark or underexposed images and watch them transform
-              into clear, vibrant photos using our <span className="font-semibold text-blue-600 dark:text-blue-400">Hybrid LIME and Zero-DCE Model</span>.
+              into clear, vibrant photos using our{" "}
+              <span className="font-semibold text-sky-600 dark:text-cyan-300">
+                Hybrid LIME and Zero-DCE Model
+              </span>
+              .
             </p>
           </div>
 
           {/* Upload Section - Hidden after image selection */}
           {!originalImage && (
             <div
-              className={`rounded-3xl p-8 mb-8 border transition-colors duration-300 ${
+              className={`rounded-3xl p-10 mb-8 border transition-all duration-300 backdrop-blur-sm ${
                 darkMode
-                  ? "bg-gray-800 border-gray-700"
-                  : "bg-gray-50 border-gray-100"
+                  ? "bg-gradient-to-br from-gray-800/90 to-slate-800/90 border-purple-500/30 shadow-2xl shadow-purple-900/20"
+                  : "bg-white/90 border-purple-200 shadow-2xl shadow-purple-100/50"
               }`}
             >
-              <h3 className="text-xl font-semibold mb-6 dark:text-white flex items-center">
-                <svg
-                  className="w-5 h-5 mr-3 text-blue-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                  />
-                </svg>
-                Step 1: Upload Your Image
-              </h3>
-
-              {/* Drag & Drop Area */}
-              <div
-                className={`border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-300 ${
-                  dragActive
-                    ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                    : darkMode
-                    ? "border-gray-600 hover:border-blue-400 hover:bg-gray-700"
-                    : "border-gray-300 hover:border-blue-400 hover:bg-gray-50"
-                }`}
-                onDragEnter={handleDrag}
-                onDragLeave={handleDrag}
-                onDragOver={handleDrag}
-                onDrop={handleDrop}
-              >
-                <div className="space-y-6">
-                  <svg
-                    className="mx-auto h-14 w-14 text-gray-400"
-                    stroke="currentColor"
-                    fill="none"
-                    viewBox="0 0 48 48"
-                  >
-                    <path
-                      d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                      strokeWidth={2}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  <div>
-                    <p className="text-xl font-medium dark:text-white mb-2">
-                      {dragActive
-                        ? "Drop your image here"
-                        : "Drag and drop your image here"}
-                    </p>
-                    <p className="text-gray-500 dark:text-gray-400">or</p>
-                  </div>
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="inline-flex items-center px-8 py-4 border border-transparent text-base font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 shadow-lg hover:shadow-xl"
-                  >
+              <div className="flex items-center justify-between mb-8">
+                <h3 className="text-2xl font-bold dark:text-white flex items-center">
+                  <div className={`p-3 rounded-xl mr-4 ${
+                    darkMode 
+                      ? "bg-gradient-to-br from-purple-600/20 to-pink-600/20" 
+                      : "bg-gradient-to-br from-purple-100 to-pink-100"
+                  }`}>
                     <svg
-                      className="w-5 h-5 mr-3"
+                      className="w-6 h-6 text-purple-600 dark:text-purple-400"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -326,6 +291,83 @@ export default function Home() {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth={2}
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                      />
+                    </svg>
+                  </div>
+                  <span>
+                    Upload Your Image
+                    <span className={`ml-3 text-sm font-normal px-3 py-1 rounded-full ${
+                      darkMode 
+                        ? "bg-purple-600/20 text-purple-300" 
+                        : "bg-purple-100 text-purple-700"
+                    }`}>
+                      Step 1
+                    </span>
+                  </span>
+                </h3>
+              </div>
+
+              {/* Drag & Drop Area */}
+              <div
+                className={`relative border-2 border-dashed rounded-3xl p-16 text-center transition-all duration-300 overflow-hidden ${
+                  dragActive
+                    ? "border-purple-500 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 scale-[1.02]"
+                    : darkMode
+                    ? "border-gray-600 hover:border-purple-400 hover:bg-gradient-to-br hover:from-gray-700/50 hover:to-slate-700/50"
+                    : "border-gray-300 hover:border-purple-400 hover:bg-gradient-to-br hover:from-purple-50/50 hover:to-pink-50/50"
+                }`}
+                onDragEnter={handleDrag}
+                onDragLeave={handleDrag}
+                onDragOver={handleDrag}
+                onDrop={handleDrop}
+              >
+                {dragActive && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-blue-500/10 animate-pulse"></div>
+                )}
+                
+                <div className="relative space-y-8">
+                  <div className={`mx-auto w-20 h-20 rounded-2xl flex items-center justify-center ${
+                    darkMode 
+                      ? "bg-gradient-to-br from-purple-600 to-pink-600 shadow-lg shadow-purple-500/50" 
+                      : "bg-gradient-to-br from-purple-500 to-pink-500 shadow-lg shadow-purple-400/50"
+                  }`}>
+                    <svg
+                      className="h-10 w-10 text-white"
+                      stroke="currentColor"
+                      fill="none"
+                      viewBox="0 0 48 48"
+                    >
+                      <path
+                        d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                        strokeWidth={2}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold dark:text-white mb-3">
+                      {dragActive
+                        ? "Drop your image here! 🎯"
+                        : "Drag and drop your image here"}
+                    </p>
+                    <p className="text-gray-500 dark:text-gray-400 text-lg">or</p>
+                  </div>
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    className="relative inline-flex items-center px-10 py-5 border-0 text-lg font-bold rounded-2xl text-white bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 hover:from-purple-700 hover:via-pink-700 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-purple-300 dark:focus:ring-purple-800 transition-all duration-200 shadow-2xl hover:shadow-purple-500/50 hover:scale-105 transform"
+                  >
+                    <svg
+                      className="w-6 h-6 mr-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2.5}
                         d="M12 6v6m0 0v6m0-6h6m-6 0H6"
                       />
                     </svg>
@@ -338,29 +380,46 @@ export default function Home() {
                     onChange={handleFileChange}
                     className="hidden"
                   />
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Supports JPG, JPEG, PNG • Max 10MB
-                  </p>
+                  <div className="flex items-center justify-center space-x-6 text-sm text-gray-500 dark:text-gray-400 pt-4">
+                    <div className="flex items-center">
+                      <svg className="w-4 h-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      JPG, JPEG, PNG
+                    </div>
+                    <div className="flex items-center">
+                      <svg className="w-4 h-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      Max 10MB
+                    </div>
+                  </div>
                 </div>
               </div>
 
               {error && (
-                <div className="mt-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl">
+                <div className={`mt-8 p-5 rounded-2xl border backdrop-blur-sm ${
+                  darkMode 
+                    ? "bg-red-900/20 border-red-500/30" 
+                    : "bg-red-50 border-red-200"
+                }`}>
                   <div className="flex items-center">
-                    <svg
-                      className="w-5 h-5 text-red-400 mr-3"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                    <p className="text-red-700 dark:text-red-300 font-medium">
+                    <div className="p-2 rounded-lg bg-red-500/20 mr-4">
+                      <svg
+                        className="w-6 h-6 text-red-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </div>
+                    <p className="text-red-700 dark:text-red-300 font-semibold text-lg">
                       {error}
                     </p>
                   </div>
@@ -372,61 +431,86 @@ export default function Home() {
           {/* Image Preview Section */}
           {originalImage && (
             <div
-              className={`rounded-3xl p-8 border transition-colors duration-300 ${
+              className={`rounded-3xl p-10 border transition-all duration-300 backdrop-blur-sm ${
                 darkMode
-                  ? "bg-gray-800 border-gray-700"
-                  : "bg-gray-50 border-gray-100"
+                  ? "bg-gradient-to-br from-gray-800/90 to-slate-800/90 border-green-500/30 shadow-2xl shadow-green-900/20"
+                  : "bg-white/90 border-green-200 shadow-2xl shadow-green-100/50"
               }`}
             >
-              <h3 className="text-xl font-semibold mb-8 dark:text-white flex items-center">
-                <svg
-                  className="w-5 h-5 mr-3 text-green-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
-                Step 2: Compare Results
-              </h3>
+              <div className="flex items-center justify-between mb-10">
+                <h3 className="text-2xl font-bold dark:text-white flex items-center">
+                  <div className={`p-3 rounded-xl mr-4 ${
+                    darkMode 
+                      ? "bg-gradient-to-br from-green-600/20 to-emerald-600/20" 
+                      : "bg-gradient-to-br from-green-100 to-emerald-100"
+                  }`}>
+                    <svg
+                      className="w-6 h-6 text-green-600 dark:text-green-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </div>
+                  <span>
+                    Compare Results
+                    <span className={`ml-3 text-sm font-normal px-3 py-1 rounded-full ${
+                      darkMode 
+                        ? "bg-green-600/20 text-green-300" 
+                        : "bg-green-100 text-green-700"
+                    }`}>
+                      Step 2
+                    </span>
+                  </span>
+                </h3>
+              </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
                 {/* Original Image */}
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h4 className="text-lg font-medium dark:text-white flex items-center">
-                      <svg
-                        className="w-4 h-4 mr-2 text-gray-500"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        />
-                      </svg>
+                <div className="space-y-5">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="text-xl font-bold dark:text-white flex items-center">
+                      <div className={`p-2 rounded-lg mr-3 ${
+                        darkMode ? "bg-gray-700" : "bg-gray-100"
+                      }`}>
+                        <svg
+                          className="w-5 h-5 text-gray-600 dark:text-gray-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          />
+                        </svg>
+                      </div>
                       Original
                     </h4>
-                    <span className="px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs rounded-full font-medium">
-                      Before
+                    <span className={`px-4 py-1.5 rounded-full text-xs font-bold ${
+                      darkMode 
+                        ? "bg-gray-700 text-gray-300" 
+                        : "bg-gray-200 text-gray-700"
+                    }`}>
+                      BEFORE
                     </span>
                   </div>
                   {originalImage && (
                     <div className="relative group">
                       <div
-                        className={`border rounded-2xl overflow-hidden shadow-lg transition-colors duration-300 ${
+                        className={`relative border-2 rounded-2xl overflow-hidden shadow-xl transition-all duration-300 ${
                           darkMode
-                            ? "border-gray-600 bg-gray-900"
-                            : "border-gray-200 bg-white"
-                        } cursor-pointer`}
+                            ? "border-gray-600 bg-gray-900 hover:border-purple-500/50 hover:shadow-purple-500/20"
+                            : "border-gray-300 bg-white hover:border-purple-400 hover:shadow-purple-300/30"
+                        } cursor-pointer transform hover:scale-[1.02]`}
                         onClick={() =>
                           openFullscreen(originalImage, "Original")
                         }
@@ -437,7 +521,7 @@ export default function Home() {
                         <img
                           src={originalImage}
                           alt="Original"
-                          className="w-full h-auto max-h-80 object-contain bg-gray-50 dark:bg-gray-800 select-none pointer-events-none"
+                          className="w-full h-auto max-h-96 object-contain bg-gray-50 dark:bg-gray-800 select-none pointer-events-none"
                         />
                         <button
                           type="button"
@@ -446,10 +530,14 @@ export default function Home() {
                             e.stopPropagation();
                             openFullscreen(originalImage, "Original");
                           }}
-                          className="absolute top-3 right-3 p-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-white dark:hover:bg-gray-700"
+                          className={`absolute top-4 right-4 p-3 rounded-xl backdrop-blur-md shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-200 ${
+                            darkMode 
+                              ? "bg-gray-800/90 hover:bg-gray-700 text-gray-200" 
+                              : "bg-white/90 hover:bg-white text-gray-700"
+                          }`}
                         >
                           <svg
-                            className="w-4 h-4 text-gray-600 dark:text-gray-300"
+                            className="w-5 h-5"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -464,15 +552,19 @@ export default function Home() {
                         </button>
                       </div>
                       {/* Download Original Button */}
-                      <div className="mt-4">
+                      <div className="mt-5">
                         <button
                           onClick={() =>
                             handleDownload(originalImage, "original-image.jpg")
                           }
-                          className="w-full inline-flex items-center justify-center px-4 py-3 border border-transparent text-sm font-medium rounded-xl text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-200 shadow-lg hover:shadow-xl"
+                          className={`w-full inline-flex items-center justify-center px-5 py-4 border-2 text-base font-bold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 ${
+                            darkMode 
+                              ? "border-gray-600 text-gray-300 bg-gray-800 hover:bg-gray-700 hover:border-gray-500" 
+                              : "border-gray-300 text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400"
+                          }`}
                         >
                           <svg
-                            className="w-4 h-4 mr-2"
+                            className="w-5 h-5 mr-3"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -480,11 +572,11 @@ export default function Home() {
                             <path
                               strokeLinecap="round"
                               strokeLinejoin="round"
-                              strokeWidth={2}
+                              strokeWidth={2.5}
                               d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                             />
                           </svg>
-                          Download Original Image
+                          Download Original
                         </button>
                       </div>
                     </div>
@@ -492,52 +584,64 @@ export default function Home() {
                 </div>
 
                 {/* Enhanced Image */}
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h4 className="text-lg font-medium dark:text-white flex items-center">
-                      <svg
-                        className="w-4 h-4 mr-2 text-green-600"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
+                <div className="space-y-5">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="text-xl font-bold dark:text-white flex items-center">
+                      <div className={`p-2 rounded-lg mr-3 ${
+                        darkMode 
+                          ? "bg-gradient-to-br from-green-600/20 to-emerald-600/20" 
+                          : "bg-gradient-to-br from-green-100 to-emerald-100"
+                      }`}>
+                        <svg
+                          className="w-5 h-5 text-green-600 dark:text-green-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                      </div>
                       Enhanced
                     </h4>
-                    <span className="px-3 py-1 bg-green-200 dark:bg-green-800 text-green-700 dark:text-green-300 text-xs rounded-full font-medium">
-                      After
+                    <span className={`px-4 py-1.5 rounded-full text-xs font-bold ${
+                      darkMode 
+                        ? "bg-gradient-to-r from-green-600/20 to-emerald-600/20 text-green-300 border border-green-500/30" 
+                        : "bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 border border-green-300"
+                    }`}>
+                      AFTER ✨
                     </span>
                   </div>
                   {isLoading ? (
                     <div
-                      className={`border rounded-2xl h-80 flex items-center justify-center transition-colors duration-300 ${
+                      className={`border-2 border-dashed rounded-2xl h-96 flex items-center justify-center transition-colors duration-300 ${
                         darkMode
-                          ? "border-gray-600 bg-gray-900"
-                          : "border-gray-200 bg-white"
+                          ? "border-purple-500/50 bg-gradient-to-br from-purple-900/20 to-pink-900/20"
+                          : "border-purple-300 bg-gradient-to-br from-purple-50 to-pink-50"
                       }`}
                     >
                       <div className="text-center">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                        <p className="dark:text-white font-medium">
-                          Processing your image...
-                        </p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                          This may take a few moments
+                        <div className="relative w-16 h-16 mx-auto mb-6">
+                          <div className="absolute inset-0 rounded-full border-4 border-purple-200 dark:border-purple-800"></div>
+                          <div className="absolute inset-0 rounded-full border-4 border-t-purple-600 dark:border-t-purple-400 animate-spin"></div>
+                        </div>
+                        <p className="dark:text-white font-bold text-lg mb-1">
+                          🎨 Processing your image...
                         </p>
                       </div>
                     </div>
                   ) : enhancedImage ? (
-                    <div className="relative">
+                    <div className="relative group">
                       <div
-                        className={`border border-green-200 dark:border-green-800 rounded-2xl overflow-hidden shadow-lg transition-colors duration-300 ${
-                          darkMode ? "bg-gray-900" : "bg-white"
-                        } cursor-pointer`}
+                        className={`relative border-2 rounded-2xl overflow-hidden shadow-xl transition-all duration-300 ${
+                          darkMode 
+                            ? "border-green-600/50 bg-gray-900 hover:border-green-500 hover:shadow-green-500/30" 
+                            : "border-green-300 bg-white hover:border-green-400 hover:shadow-green-300/40"
+                        } cursor-pointer transform hover:scale-[1.02]`}
                         onClick={() =>
                           openFullscreen(enhancedImage, "Enhanced")
                         }
@@ -545,10 +649,19 @@ export default function Home() {
                         role="button"
                         aria-label="Preview enhanced image full screen"
                       >
+                        <div className="absolute top-4 left-4 z-10">
+                          <span className={`px-3 py-1.5 rounded-lg text-xs font-bold backdrop-blur-md ${
+                            darkMode 
+                              ? "bg-green-600/90 text-white" 
+                              : "bg-green-500 text-white"
+                          }`}>
+                            ✨ ENHANCED
+                          </span>
+                        </div>
                         <img
                           src={enhancedImage}
                           alt="Enhanced"
-                          className="w-full h-auto max-h-80 object-contain bg-gray-50 dark:bg-gray-800 select-none pointer-events-none"
+                          className="w-full h-auto max-h-96 object-contain bg-gray-50 dark:bg-gray-800 select-none pointer-events-none"
                         />
                         <button
                           type="button"
@@ -557,10 +670,14 @@ export default function Home() {
                             e.stopPropagation();
                             openFullscreen(enhancedImage, "Enhanced");
                           }}
-                          className="absolute top-3 right-3 p-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-white dark:hover:bg-gray-700"
+                          className={`absolute top-4 right-4 p-3 rounded-xl backdrop-blur-md shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-200 ${
+                            darkMode 
+                              ? "bg-gray-800/90 hover:bg-gray-700 text-gray-200" 
+                              : "bg-white/90 hover:bg-white text-gray-700"
+                          }`}
                         >
                           <svg
-                            className="w-4 h-4 text-gray-600 dark:text-gray-300"
+                            className="w-5 h-5"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -575,15 +692,44 @@ export default function Home() {
                         </button>
                       </div>
                       {/* Download Enhanced Button */}
-                      <div className="mt-4">
+                      <div className="mt-5">
                         <button
                           onClick={() =>
                             handleDownload(enhancedImage, "enhanced-image.jpg")
                           }
-                          className="w-full inline-flex items-center justify-center px-4 py-3 border border-transparent text-sm font-medium rounded-xl text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 shadow-lg hover:shadow-xl"
+                          className="w-full inline-flex items-center justify-center px-5 py-4 border-0 text-base font-bold rounded-xl text-white bg-gradient-to-r from-green-600 via-emerald-600 to-green-600 hover:from-green-700 hover:via-emerald-700 hover:to-green-700 focus:outline-none focus:ring-4 focus:ring-green-300 dark:focus:ring-green-800 transition-all duration-200 shadow-2xl hover:shadow-green-500/50 transform hover:scale-105"
                         >
                           <svg
-                            className="w-4 h-4 mr-2"
+                            className="w-5 h-5 mr-3"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2.5}
+                              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                            />
+                          </svg>
+                          Download Enhanced ✨
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div
+                      className={`border-2 border-dashed rounded-2xl h-96 flex items-center justify-center transition-colors duration-300 ${
+                        darkMode
+                          ? "border-gray-600 bg-gray-900/50"
+                          : "border-gray-300 bg-gray-50"
+                      }`}
+                    >
+                      <div className="text-center text-gray-500 dark:text-gray-400">
+                        <div className={`mx-auto w-16 h-16 rounded-2xl flex items-center justify-center mb-4 ${
+                          darkMode ? "bg-gray-800" : "bg-gray-200"
+                        }`}>
+                          <svg
+                            className="h-8 w-8"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -592,40 +738,15 @@ export default function Home() {
                               strokeLinecap="round"
                               strokeLinejoin="round"
                               strokeWidth={2}
-                              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                             />
                           </svg>
-                          Download Enhanced Image
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div
-                      className={`border rounded-2xl h-80 flex items-center justify-center transition-colors duration-300 ${
-                        darkMode
-                          ? "border-gray-600 bg-gray-900"
-                          : "border-gray-200 bg-white"
-                      }`}
-                    >
-                      <div className="text-center text-gray-500 dark:text-gray-400">
-                        <svg
-                          className="mx-auto h-12 w-12 mb-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                          />
-                        </svg>
-                        <p className="font-medium">
+                        </div>
+                        <p className="font-bold text-lg mb-2">
                           Enhanced image will appear here
                         </p>
                         <p className="text-sm">
-                          Click "Enhance Image" to process
+                          Click "Enhance Image" below to process
                         </p>
                       </div>
                     </div>
@@ -634,63 +755,70 @@ export default function Home() {
               </div>
 
               {/* Action Buttons - Inside Compare Results Box */}
-              <div className="text-center">
-                <div className="inline-flex items-center space-x-4">
+              <div className="text-center pt-4">
+                <div className="inline-flex flex-col sm:flex-row items-center gap-5">
                   <button
                     onClick={handleSubmit}
                     disabled={isLoading}
-                    className="inline-flex items-center justify-center px-10 py-4 border border-transparent text-lg font-semibold rounded-xl text-white bg-green-600 hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                    className="relative group inline-flex items-center justify-center px-12 py-5 border-0 text-xl font-extrabold rounded-2xl text-white bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 hover:from-purple-700 hover:via-pink-700 hover:to-blue-700 disabled:from-gray-400 disabled:via-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed transition-all duration-300 shadow-2xl hover:shadow-purple-500/50 transform hover:scale-110 disabled:transform-none disabled:shadow-lg"
                   >
-                    {isLoading ? (
-                      <>
-                        <svg
-                          className="animate-spin -ml-1 mr-3 h-6 w-6 text-white"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
+                    <span className="relative flex items-center">
+                      {isLoading ? (
+                        <>
+                          <svg
+                            className="animate-spin -ml-1 mr-4 h-7 w-7 text-white"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                          </svg>
+                          Processing Magic...
+                        </>
+                      ) : (
+                        <>
+                          <svg
+                            className="w-7 h-7 mr-3"
+                            fill="none"
                             stroke="currentColor"
-                            strokeWidth="4"
-                          ></circle>
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
-                        </svg>
-                        <span>Processing...</span>
-                      </>
-                    ) : (
-                      <>
-                        <svg
-                          className="w-6 h-6 mr-3"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M13 10V3L4 14h7v7l9-11h-7z"
-                          />
-                        </svg>
-                        <span>Enhance Image</span>
-                      </>
-                    )}
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2.5}
+                              d="M13 10V3L4 14h7v7l9-11h-7z"
+                            />
+                          </svg>
+                          ✨ Enhance Image
+                        </>
+                      )}
+                    </span>
                   </button>
 
                   <button
                     onClick={handleReset}
-                    className="px-8 py-4 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-xl transition-all duration-200 shadow-lg"
+                    className={`px-10 py-5 border-2 text-lg font-bold rounded-2xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 ${
+                      darkMode 
+                        ? "border-gray-600 text-gray-300 bg-gray-800 hover:bg-gray-700 hover:border-gray-500" 
+                        : "border-gray-300 text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400"
+                    }`}
                   >
                     <svg
-                      className="w-5 h-5 mr-3 inline"
+                      className="w-6 h-6 mr-3 inline"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -698,7 +826,7 @@ export default function Home() {
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        strokeWidth={2}
+                        strokeWidth={2.5}
                         d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                       />
                     </svg>
@@ -711,46 +839,126 @@ export default function Home() {
 
           {/* Info Section */}
           <div
-            className={`mt-8 rounded-3xl p-8 border transition-colors duration-300 ${
+            className={`mt-12 rounded-3xl p-10 border transition-all duration-300 backdrop-blur-sm ${
               darkMode
-                ? "bg-blue-900/20 border-blue-800"
-                : "bg-blue-50 border-blue-100"
+                ? "bg-gradient-to-br from-blue-900/30 via-purple-900/30 to-pink-900/30 border-blue-500/30 shadow-xl"
+                : "bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 border-blue-200 shadow-xl"
             }`}
           >
-            <h3 className="text-lg font-semibold mb-4 dark:text-white flex items-center">
-              <svg
-                className="w-5 h-5 mr-3 text-blue-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              About Hybrid LIME and Zero-DCE Model
-            </h3>
-            <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
-              Our hybrid model combines the power of <strong>LIME (Low-Light Image Enhancement)</strong> and <strong>Zero-DCE (Zero-Reference Deep Curve Estimation)</strong> algorithms. 
-              This approach leverages multiple illumination estimation methods, guided filtering for structure preservation, 
-              adaptive gamma correction, and deep learning-based curve estimation to produce superior results with 
-              exceptional realism, enhanced details, and natural color rendition in low-light conditions.
-            </p>
+            <div className="flex items-start space-x-5">
+              <div className={`flex-shrink-0 p-4 rounded-2xl ${
+                darkMode 
+                  ? "bg-gradient-to-br from-blue-600/20 to-purple-600/20" 
+                  : "bg-gradient-to-br from-blue-100 to-purple-100"
+              }`}>
+                <svg
+                  className="w-8 h-8 text-blue-600 dark:text-blue-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                  About Our Hybrid AI Model
+                </h3>
+                <div className="space-y-4">
+                  <p className="text-gray-700 dark:text-gray-300 text-base leading-relaxed">
+                    Our cutting-edge hybrid model seamlessly combines the strengths of{" "}
+                    <span className="font-bold text-purple-600 dark:text-purple-400">LIME (Low-Light Image Enhancement)</span> and{" "}
+                    <span className="font-bold text-pink-600 dark:text-pink-400">Zero-DCE (Zero-Reference Deep Curve Estimation)</span> algorithms.
+                  </p>
+                  
+                  <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 p-5 rounded-2xl ${
+                    darkMode ? "bg-black/20" : "bg-white/60"
+                  }`}>
+                    <div className="flex items-start space-x-3">
+                      <div className="flex-shrink-0 mt-1">
+                        <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                          darkMode ? "bg-purple-600/30" : "bg-purple-200"
+                        }`}>
+                          <svg className="w-4 h-4 text-purple-600 dark:text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold dark:text-white">Intelligent Illumination</p>
+                        <p className="text-xs text-gray-600 dark:text-gray-400">Multiple estimation methods for optimal brightness</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start space-x-3">
+                      <div className="flex-shrink-0 mt-1">
+                        <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                          darkMode ? "bg-pink-600/30" : "bg-pink-200"
+                        }`}>
+                          <svg className="w-4 h-4 text-pink-600 dark:text-pink-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold dark:text-white">Deep Learning Power</p>
+                        <p className="text-xs text-gray-600 dark:text-gray-400">Zero-reference curve estimation technology</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start space-x-3">
+                      <div className="flex-shrink-0 mt-1">
+                        <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                          darkMode ? "bg-blue-600/30" : "bg-blue-200"
+                        }`}>
+                          <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold dark:text-white">Structure Preservation</p>
+                        <p className="text-xs text-gray-600 dark:text-gray-400">Guided filtering maintains image details</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start space-x-3">
+                      <div className="flex-shrink-0 mt-1">
+                        <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                          darkMode ? "bg-green-600/30" : "bg-green-200"
+                        }`}>
+                          <svg className="w-4 h-4 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold dark:text-white">Natural Color Rendition</p>
+                        <p className="text-xs text-gray-600 dark:text-gray-400">Adaptive gamma correction for realism</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </main>
 
       {/* Fullscreen Modal */}
       {fullscreenMode && fullscreenImage && (
-        <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
-          <div className="relative max-w-7xl max-h-full">
-            <div className="absolute top-4 right-4 z-10">
+        <div className="fixed inset-0 bg-black/95 backdrop-blur-xl z-50 flex items-center justify-center p-6 animate-fadeIn">
+          <div className="relative max-w-7xl max-h-full w-full">
+            {/* Close Button */}
+            <div className="absolute -top-2 right-0 z-10">
               <button
                 onClick={closeFullscreen}
-                className="p-3 bg-white/20 backdrop-blur-sm rounded-xl text-white hover:bg-white/30 transition-all duration-200"
+                className="group p-4 bg-gradient-to-r from-red-600 to-pink-600 backdrop-blur-md rounded-2xl text-white hover:from-red-700 hover:to-pink-700 transition-all duration-200 shadow-2xl hover:shadow-red-500/50 transform hover:scale-110"
               >
                 <svg
                   className="w-6 h-6"
@@ -761,22 +969,58 @@ export default function Home() {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={2}
+                    strokeWidth={2.5}
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
               </button>
             </div>
-            <div className="text-center mb-4">
-              <h3 className="text-white text-lg font-semibold">
-                {fullscreenImage.type} Image
-              </h3>
+            
+            {/* Image Title */}
+            <div className="text-center mb-6">
+              <div className="inline-block">
+                <h3 className="text-white text-2xl font-bold px-6 py-3 rounded-2xl bg-gradient-to-r from-purple-600/30 via-pink-600/30 to-blue-600/30 backdrop-blur-md border border-white/20">
+                  {fullscreenImage.type === "Enhanced" && "✨ "}
+                  {fullscreenImage.type} Image
+                </h3>
+              </div>
             </div>
-            <img
-              src={fullscreenImage.src}
-              alt={fullscreenImage.type}
-              className="max-w-full max-h-[80vh] object-contain rounded-2xl shadow-2xl"
-            />
+            
+            {/* Image Container */}
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-3xl blur-2xl opacity-20"></div>
+              <img
+                src={fullscreenImage.src}
+                alt={fullscreenImage.type}
+                className="relative max-w-full max-h-[75vh] object-contain rounded-3xl shadow-2xl mx-auto border-4 border-white/10"
+              />
+            </div>
+            
+            {/* Download Button */}
+            <div className="text-center mt-6">
+              <button
+                onClick={() => handleDownload(
+                  fullscreenImage.src, 
+                  `${fullscreenImage.type.toLowerCase()}-image.jpg`
+                )}
+                className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold rounded-2xl transition-all duration-200 shadow-2xl hover:shadow-green-500/50 transform hover:scale-105"
+              >
+                <svg
+                  className="w-5 h-5 mr-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2.5}
+                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+                Download Image
+              </button>
+            </div>
           </div>
         </div>
       )}
