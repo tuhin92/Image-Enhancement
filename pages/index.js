@@ -178,7 +178,7 @@ export default function Home() {
       </Head>
 
       {/* Header with Theme Toggle */}
-      <header className={`backdrop-blur-lg border-b transition-colors duration-300 ${
+      <header className={`sticky top-0 z-50 backdrop-blur-lg border-b transition-colors duration-300 ${
         darkMode 
           ? "bg-gray-900/80 border-gray-800" 
           : "bg-white/90 border-gray-200 shadow-sm"
