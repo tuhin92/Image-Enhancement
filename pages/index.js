@@ -183,7 +183,7 @@ export default function Home() {
           ? "bg-gray-900/80 border-gray-800" 
           : "bg-white/90 border-gray-200 shadow-sm"
       }`}>
-        <div className="container mx-auto px-6 py-5">
+        <div className="container mx-auto px-20 py-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="relative group">
