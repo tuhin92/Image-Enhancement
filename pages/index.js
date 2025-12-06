@@ -165,7 +165,7 @@ export default function Home() {
       className={`min-h-screen transition-colors duration-300 ${
         darkMode
           ? "bg-gray-950 text-white"
-          : "bg-gray-50 text-gray-900"
+          : "bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-100 text-gray-900"
       }`}
     >
       <Head>
@@ -181,7 +181,7 @@ export default function Home() {
       <header className={`sticky top-0 z-50 backdrop-blur-lg border-b transition-colors duration-300 ${
         darkMode 
           ? "bg-gray-900/80 border-gray-800" 
-          : "bg-white/90 border-gray-200 shadow-sm"
+          : "bg-white/95 border-blue-200 shadow-md"
       }`}>
         <div className="container mx-auto px-20 py-5">
           <div className="flex items-center justify-between">
@@ -270,7 +270,7 @@ export default function Home() {
               className={`rounded-2xl p-10 mb-8 border transition-all duration-300 backdrop-blur-sm ${
                 darkMode
                   ? "bg-gradient-to-br from-gray-800/90 to-gray-900/90 border-blue-500/30 shadow-2xl shadow-blue-900/20"
-                  : "bg-white/90 border-blue-200 shadow-2xl shadow-blue-100/50"
+                  : "bg-white/95 border-blue-300 shadow-2xl shadow-blue-200/60"
               }`}
             >
               <div className="flex items-center justify-between mb-8">
@@ -278,7 +278,7 @@ export default function Home() {
                   <div className={`p-3 rounded-xl mr-4 ${
                     darkMode 
                       ? "bg-gradient-to-br from-blue-600/20 to-indigo-600/20" 
-                      : "bg-gradient-to-br from-blue-100 to-indigo-100"
+                      : "bg-gradient-to-br from-blue-200 to-indigo-200"
                   }`}>
                     <svg
                       className="w-6 h-6 text-purple-600 dark:text-purple-400"
@@ -311,10 +311,10 @@ export default function Home() {
               <div
                 className={`relative border-2 border-dashed rounded-3xl p-16 text-center transition-all duration-300 overflow-hidden ${
                   dragActive
-                    ? "border-purple-500 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 scale-[1.02]"
+                    ? "border-blue-500 bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-purple-900/30 dark:to-pink-900/30 scale-[1.02]"
                     : darkMode
                     ? "border-gray-600 hover:border-purple-400 hover:bg-gradient-to-br hover:from-gray-700/50 hover:to-slate-700/50"
-                    : "border-gray-300 hover:border-purple-400 hover:bg-gradient-to-br hover:from-purple-50/50 hover:to-pink-50/50"
+                    : "border-blue-300 hover:border-blue-400 hover:bg-gradient-to-br hover:from-blue-50 hover:to-indigo-50"
                 }`}
                 onDragEnter={handleDrag}
                 onDragLeave={handleDrag}
@@ -841,7 +841,7 @@ export default function Home() {
             className={`mt-12 rounded-2xl p-10 border transition-all duration-300 backdrop-blur-sm ${
               darkMode
                 ? "bg-gradient-to-br from-blue-900/30 via-indigo-900/30 to-blue-900/30 border-blue-500/30 shadow-xl"
-                : "bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-50 border-blue-200 shadow-xl"
+                : "bg-gradient-to-br from-white/90 via-blue-50/90 to-indigo-50/90 border-blue-300 shadow-xl"
             }`}
           >
             <div className="flex items-start space-x-5">
@@ -876,7 +876,7 @@ export default function Home() {
                   </p>
                   
                   <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 p-5 rounded-2xl ${
-                    darkMode ? "bg-black/20" : "bg-white/60"
+                    darkMode ? "bg-black/20" : "bg-blue-50/80"
                   }`}>
                     <div className="flex items-start space-x-3">
                       <div className="flex-shrink-0 mt-1">
