@@ -167,10 +167,10 @@ export default function Home() {
       }`}
     >
       <Head>
-        <title>LIME Image Enhancement Tool</title>
+        <title>Low Light Image Enhancement</title>
         <meta
           name="description"
-          content="Low-Light Image Enhancement using LIME algorithm"
+          content="Low-Light Image Enhancement using Hybrid LIME and Zero-DCE Model"
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -198,7 +198,7 @@ export default function Home() {
                 </svg>
               </div>
               <div>
-                <h1 className="text-xl font-bold">LIME Enhancement</h1>
+                <h1 className="text-xl font-bold">Low Light Image Enhancement</h1>
               </div>
             </div>
 
@@ -246,7 +246,7 @@ export default function Home() {
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
               Upload your dark or underexposed images and watch them transform
-              into clear, vibrant photos using our advanced model.
+              into clear, vibrant photos using our <span className="font-semibold text-blue-600 dark:text-blue-400">Hybrid LIME and Zero-DCE Model</span>.
             </p>
           </div>
 
@@ -731,14 +731,13 @@ export default function Home() {
                   d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              About Enhanced LIME Algorithm
+              About Hybrid LIME and Zero-DCE Model
             </h3>
             <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
-              This enhanced LIME algorithm uses advanced computer vision
-              techniques including multiple illumination estimation methods,
-              guided filtering for structure preservation, adaptive gamma
-              correction, and image sharpening to produce superior results with
-              better realism and detail preservation.
+              Our hybrid model combines the power of <strong>LIME (Low-Light Image Enhancement)</strong> and <strong>Zero-DCE (Zero-Reference Deep Curve Estimation)</strong> algorithms. 
+              This approach leverages multiple illumination estimation methods, guided filtering for structure preservation, 
+              adaptive gamma correction, and deep learning-based curve estimation to produce superior results with 
+              exceptional realism, enhanced details, and natural color rendition in low-light conditions.
             </p>
           </div>
         </div>
