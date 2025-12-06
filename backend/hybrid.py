@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Enhanced LIME (Low-Light Image Enhancement) Algorithm Implementation
-This script enhances low-light images using an improved LIME algorithm.
+Hybrid LIME + Zero-DCE Image Enhancement Algorithm Implementation
+This script enhances low-light images using a hybrid approach combining LIME and Zero-DCE techniques.
 """
 
 import cv2
@@ -84,9 +84,9 @@ def enhance_image(img, illumination, gamma=0.85):
 
     return enhanced
 
-def lime_enhance(image_path, output_path, illumination_method='max_rgb', gamma=1.0, sigma=3, radius=15, eps=1e-3, max_gain=5.0, denoise_strength=10, saturation_scale=1.0):
+def hybrid_enhance(image_path, output_path, illumination_method='max_rgb', gamma=1.0, sigma=3, radius=15, eps=1e-3, max_gain=5.0, denoise_strength=10, saturation_scale=1.0):
     """
-    Apply LIME enhancement to an image with improved realism and flexibility.
+    Apply Hybrid LIME + Zero-DCE enhancement to an image with improved realism and flexibility.
     Parameters:
         image_path: str
         output_path: str
@@ -148,7 +148,7 @@ def main():
     """
     Main function to process command line arguments and enhance image.
     """
-    parser = argparse.ArgumentParser(description='Enhanced LIME Low-Light Image Enhancement')
+    parser = argparse.ArgumentParser(description='Hybrid LIME + Zero-DCE Low-Light Image Enhancement')
     parser.add_argument('input_path', help='Path to input image')
     parser.add_argument('output_path', help='Path to save enhanced image')
     parser.add_argument('--method', type=str, default='max_rgb', 
@@ -178,8 +178,8 @@ def main():
         print(f"Image shape: {img.shape}")
         
         # Enhance the image
-        print("Enhancing image using improved LIME algorithm...")
-        success = lime_enhance(
+        print("Enhancing image using Hybrid LIME + Zero-DCE algorithm...")
+        success = hybrid_enhance(
             args.input_path, 
             args.output_path,
             illumination_method=args.method,

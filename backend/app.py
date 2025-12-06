@@ -1,6 +1,6 @@
 from flask import Flask, request, send_file, jsonify
 import os
-from lime_enhance import lime_enhance
+from hybrid import hybrid_enhance
 
 app = Flask(__name__)
 
@@ -19,7 +19,7 @@ def enhance():
     denoise_strength = int(request.form.get('denoise_strength', 10))
     saturation_scale = float(request.form.get('saturation_scale', 1.0))
 
-    success = lime_enhance(input_path, output_path, gamma=gamma, max_gain=max_gain, denoise_strength=denoise_strength, saturation_scale=saturation_scale)
+    success = hybrid_enhance(input_path, output_path, gamma=gamma, max_gain=max_gain, denoise_strength=denoise_strength, saturation_scale=saturation_scale)
     if not success or not os.path.exists(output_path):
         return jsonify({'error': 'Enhancement failed'}), 500
     return send_file(output_path, mimetype='image/jpeg')

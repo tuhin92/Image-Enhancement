@@ -75,7 +75,7 @@ The application will be available at `http://localhost:3000`
 You can also use the Python script directly from the command line:
 
 ```bash
-python backend/lime_enhance.py input_image.jpg output_enhanced.jpg
+python backend/hybrid.py input_image.jpg output_enhanced.jpg
 ```
 
 Additional parameters:
@@ -85,7 +85,7 @@ Additional parameters:
 
 Example:
 ```bash
-python backend/lime_enhance.py dark_image.jpg enhanced_image.jpg --alpha 0.2 --gamma 0.7
+python backend/hybrid.py dark_image.jpg enhanced_image.jpg --alpha 0.2 --gamma 0.7
 ```
 
 ## Project Structure
@@ -97,7 +97,7 @@ image-enhance/
 │   └── api/
 │       └── enhance.js        # API route for image processing
 ├── backend/
-│   └── lime_enhance.py      # LIME enhancement algorithm
+│   └── hybrid.py            # Hybrid LIME + Zero-DCE enhancement algorithm
 ├── uploads/                  # Temporary upload directory (auto-created)
 ├── package.json              # Node.js dependencies
 ├── requirements.txt          # Python dependencies
@@ -172,7 +172,7 @@ To see detailed logs, check the terminal where you ran `npm run dev`. The applic
 
 1. **Frontend**: Modify `pages/index.js` for UI changes
 2. **API**: Modify `pages/api/enhance.js` for backend logic
-3. **Algorithm**: Modify `backend/lime_enhance.py` for image processing
+3. **Algorithm**: Modify `backend/hybrid.py` for image processing
 
 ### Testing
 

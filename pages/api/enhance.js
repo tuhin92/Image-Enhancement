@@ -93,7 +93,7 @@ export default async function handler(req, res) {
 
     // Call Python script
     console.log('Calling Python script...');
-    const pythonScriptPath = path.join(process.cwd(), 'backend', 'lime_enhance.py');
+    const pythonScriptPath = path.join(process.cwd(), 'backend', 'hybrid.py');
     console.log('Python script path:', pythonScriptPath);
     
     if (!fs.existsSync(pythonScriptPath)) {
