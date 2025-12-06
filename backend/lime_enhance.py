@@ -84,9 +84,20 @@ def enhance_image(img, illumination, gamma=0.85):
 
     return enhanced
 
-def lime_enhance(image_path, output_path, illumination_method='max_rgb', gamma=0.85, sigma=3, radius=15, eps=1e-3):
+def lime_enhance(image_path, output_path, illumination_method='max_rgb', gamma=1.0, sigma=3, radius=15, eps=1e-3, max_gain=5.0, denoise_strength=10, saturation_scale=1.0):
     """
     Apply LIME enhancement to an image with improved realism and flexibility.
+    Parameters:
+        image_path: str
+        output_path: str
+        illumination_method: str
+        gamma: float
+        sigma: float
+        radius: int
+        eps: float
+        max_gain: float (limits how much dark areas are brightened)
+        denoise_strength: int (strength for denoising filter)
+        saturation_scale: float (scales the saturation after enhancement)
     """
     try:
         img = cv2.imread(image_path)
@@ -98,12 +109,30 @@ def lime_enhance(image_path, output_path, illumination_method='max_rgb', gamma=0
 
         # Step 1: Estimate Illumination
         illumination = estimate_illumination(img, method=illumination_method, sigma=sigma)
+        # Clamp illumination to avoid over-brightening (max_gain)
+        illumination = np.clip(illumination, 1.0 / max_gain, 1.0)
 
         # Step 2: Refine Illumination using Guided Filtering
         refined_illumination = refine_illumination(illumination, radius=radius, eps=eps)
+        refined_illumination = np.clip(refined_illumination, 1.0 / max_gain, 1.0)
 
         # Step 3: Enhance Image using Gamma Correction and Sharpening
         enhanced_img = enhance_image(img, refined_illumination, gamma=gamma)
+
+        # Step 4: Denoising
+        if denoise_strength > 0:
+            enhanced_img = cv2.cvtColor(enhanced_img, cv2.COLOR_RGB2BGR)
+            enhanced_img = cv2.fastNlMeansDenoisingColored(enhanced_img, None, denoise_strength, denoise_strength, 7, 21)
+            enhanced_img = cv2.cvtColor(enhanced_img, cv2.COLOR_BGR2RGB)
+
+        # Step 5: Adjust Saturation
+        if saturation_scale != 1.0:
+            hsv = cv2.cvtColor(enhanced_img, cv2.COLOR_RGB2HSV).astype(np.float32)
+            hsv[...,1] = np.clip(hsv[...,1] * saturation_scale, 0, 255)
+            enhanced_img = cv2.cvtColor(hsv.astype(np.uint8), cv2.COLOR_HSV2RGB)
+
+        # Step 6: Blend with original for natural look (optional, here 80% enhanced, 20% original)
+        enhanced_img = cv2.addWeighted(enhanced_img, 0.8, img, 0.2, 0)
 
         # Save the output
         output_image = Image.fromarray(enhanced_img)
