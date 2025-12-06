@@ -163,16 +163,16 @@ export default function Home() {
   return (
     <div
       className={`min-h-screen transition-colors duration-300 ${
-        darkMode 
-          ? "bg-slate-950 text-white" 
-          : "bg-slate-50 text-gray-900"
+        darkMode
+          ? "bg-gray-950 text-white"
+          : "bg-gray-50 text-gray-900"
       }`}
     >
       <Head>
         <title>Low Light Image Enhancement</title>
         <meta
           name="description"
-          content="Low-Light Image Enhancement using Hybrid LIME and Zero-DCE Model"
+          content="Professional low-light image enhancement using hybrid LIME and Zero-DCE models"
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -180,15 +180,15 @@ export default function Home() {
       {/* Header with Theme Toggle */}
       <header className={`backdrop-blur-lg border-b transition-colors duration-300 ${
         darkMode 
-          ? "bg-slate-900/80 border-slate-800" 
-          : "bg-white/90 border-slate-200 shadow-sm"
+          ? "bg-gray-900/80 border-gray-800" 
+          : "bg-white/90 border-gray-200 shadow-sm"
       }`}>
         <div className="container mx-auto px-6 py-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="relative group">
-                <div className="absolute inset-0 bg-sky-500 rounded-2xl blur opacity-60 group-hover:opacity-90 transition duration-300"></div>
-                <div className="relative inline-flex items-center justify-center w-12 h-12 bg-sky-600 rounded-2xl shadow-lg">
+                <div className="absolute inset-0 bg-blue-500 rounded-xl blur opacity-60 group-hover:opacity-90 transition duration-300"></div>
+                <div className="relative inline-flex items-center justify-center w-12 h-12 bg-blue-600 rounded-xl shadow-lg">
                   <svg
                     className="w-7 h-7 text-white"
                     fill="none"
@@ -205,10 +205,10 @@ export default function Home() {
                 </div>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-slate-900 dark:text-white">
-                  Low Light Image Enhancement
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+                  Image Enhancement Platform
                 </h1>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Hybrid LIME + Zero-DCE Model</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Hybrid LIME + Zero-DCE Technology</p>
               </div>
             </div>
 
@@ -217,8 +217,8 @@ export default function Home() {
               onClick={toggleTheme}
               className={`p-3 rounded-xl transition-all duration-200 hover:scale-105 border ${
                 darkMode
-                  ? "bg-slate-800 border-slate-700 text-yellow-300 hover:bg-slate-700"
-                  : "bg-white border-slate-200 text-slate-700 hover:bg-slate-100"
+                  ? "bg-gray-800 border-gray-700 text-blue-300 hover:bg-gray-700"
+                  : "bg-white border-gray-200 text-gray-700 hover:bg-gray-100"
               }`}
             >
               {darkMode ? (
@@ -251,15 +251,15 @@ export default function Home() {
         <div className="max-w-7xl mx-auto">
           {/* Welcome Section */}
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold mb-4 text-sky-400 dark:text-cyan-300 tracking-tight">
-              Transform Your Low-Light Images
+            <h2 className="text-3xl md:text-5xl font-bold mb-4 text-blue-600 dark:text-blue-300 tracking-tight">
+              Professional Image Enhancement
             </h2>
-            <div className="mx-auto h-0.5 w-32 bg-sky-500/60 rounded-full mb-6" />
+            <div className="mx-auto h-0.5 w-32 bg-blue-500/60 rounded-full mb-6" />
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
-              Upload your dark or underexposed images and watch them transform
-              into clear, vibrant photos using our{" "}
-              <span className="font-semibold text-sky-600 dark:text-cyan-300">
-                Hybrid LIME and Zero-DCE Model
+              Enhance low-light and underexposed images with advanced AI technology
+              powered by our{" "}
+              <span className="font-semibold text-blue-600 dark:text-blue-300">
+                Hybrid LIME and Zero-DCE Models
               </span>
               .
             </p>
@@ -268,18 +268,18 @@ export default function Home() {
           {/* Upload Section - Hidden after image selection */}
           {!originalImage && (
             <div
-              className={`rounded-3xl p-10 mb-8 border transition-all duration-300 backdrop-blur-sm ${
+              className={`rounded-2xl p-10 mb-8 border transition-all duration-300 backdrop-blur-sm ${
                 darkMode
-                  ? "bg-gradient-to-br from-gray-800/90 to-slate-800/90 border-purple-500/30 shadow-2xl shadow-purple-900/20"
-                  : "bg-white/90 border-purple-200 shadow-2xl shadow-purple-100/50"
+                  ? "bg-gradient-to-br from-gray-800/90 to-gray-900/90 border-blue-500/30 shadow-2xl shadow-blue-900/20"
+                  : "bg-white/90 border-blue-200 shadow-2xl shadow-blue-100/50"
               }`}
             >
               <div className="flex items-center justify-between mb-8">
                 <h3 className="text-2xl font-bold dark:text-white flex items-center">
                   <div className={`p-3 rounded-xl mr-4 ${
                     darkMode 
-                      ? "bg-gradient-to-br from-purple-600/20 to-pink-600/20" 
-                      : "bg-gradient-to-br from-purple-100 to-pink-100"
+                      ? "bg-gradient-to-br from-blue-600/20 to-indigo-600/20" 
+                      : "bg-gradient-to-br from-blue-100 to-indigo-100"
                   }`}>
                     <svg
                       className="w-6 h-6 text-purple-600 dark:text-purple-400"
@@ -299,8 +299,8 @@ export default function Home() {
                     Upload Your Image
                     <span className={`ml-3 text-sm font-normal px-3 py-1 rounded-full ${
                       darkMode 
-                        ? "bg-purple-600/20 text-purple-300" 
-                        : "bg-purple-100 text-purple-700"
+                        ? "bg-blue-600/20 text-blue-300" 
+                        : "bg-blue-100 text-blue-700"
                     }`}>
                       Step 1
                     </span>
@@ -323,14 +323,14 @@ export default function Home() {
                 onDrop={handleDrop}
               >
                 {dragActive && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-blue-500/10 animate-pulse"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-blue-500/10 animate-pulse"></div>
                 )}
                 
                 <div className="relative space-y-8">
                   <div className={`mx-auto w-20 h-20 rounded-2xl flex items-center justify-center ${
                     darkMode 
-                      ? "bg-gradient-to-br from-purple-600 to-pink-600 shadow-lg shadow-purple-500/50" 
-                      : "bg-gradient-to-br from-purple-500 to-pink-500 shadow-lg shadow-purple-400/50"
+                      ? "bg-gradient-to-br from-blue-600 to-indigo-600 shadow-lg shadow-blue-500/50" 
+                      : "bg-gradient-to-br from-blue-500 to-indigo-500 shadow-lg shadow-blue-400/50"
                   }`}>
                     <svg
                       className="h-10 w-10 text-white"
@@ -349,14 +349,14 @@ export default function Home() {
                   <div>
                     <p className="text-2xl font-bold dark:text-white mb-3">
                       {dragActive
-                        ? "Drop your image here! 🎯"
+                        ? "Drop your image here"
                         : "Drag and drop your image here"}
                     </p>
                     <p className="text-gray-500 dark:text-gray-400 text-lg">or</p>
                   </div>
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="relative inline-flex items-center px-10 py-5 border-0 text-lg font-bold rounded-2xl text-white bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 hover:from-purple-700 hover:via-pink-700 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-purple-300 dark:focus:ring-purple-800 transition-all duration-200 shadow-2xl hover:shadow-purple-500/50 hover:scale-105 transform"
+                    className="relative inline-flex items-center px-10 py-5 border-0 text-lg font-bold rounded-2xl text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 hover:from-blue-700 hover:via-indigo-700 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 transition-all duration-200 shadow-2xl hover:shadow-blue-500/50 hover:scale-105 transform"
                   >
                     <svg
                       className="w-6 h-6 mr-3"
@@ -431,10 +431,10 @@ export default function Home() {
           {/* Image Preview Section */}
           {originalImage && (
             <div
-              className={`rounded-3xl p-10 border transition-all duration-300 backdrop-blur-sm ${
+              className={`rounded-2xl p-10 border transition-all duration-300 backdrop-blur-sm ${
                 darkMode
-                  ? "bg-gradient-to-br from-gray-800/90 to-slate-800/90 border-green-500/30 shadow-2xl shadow-green-900/20"
-                  : "bg-white/90 border-green-200 shadow-2xl shadow-green-100/50"
+                  ? "bg-gradient-to-br from-gray-800/90 to-gray-900/90 border-blue-500/30 shadow-2xl shadow-blue-900/20"
+                  : "bg-white/90 border-blue-200 shadow-2xl shadow-blue-100/50"
               }`}
             >
               <div className="flex items-center justify-between mb-10">
@@ -462,8 +462,8 @@ export default function Home() {
                     Compare Results
                     <span className={`ml-3 text-sm font-normal px-3 py-1 rounded-full ${
                       darkMode 
-                        ? "bg-green-600/20 text-green-300" 
-                        : "bg-green-100 text-green-700"
+                        ? "bg-blue-600/20 text-blue-300" 
+                        : "bg-blue-100 text-blue-700"
                     }`}>
                       Step 2
                     </span>
@@ -613,7 +613,7 @@ export default function Home() {
                         ? "bg-gradient-to-r from-green-600/20 to-emerald-600/20 text-green-300 border border-green-500/30" 
                         : "bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 border border-green-300"
                     }`}>
-                      AFTER ✨
+                      AFTER
                     </span>
                   </div>
                   {isLoading ? (
@@ -712,7 +712,7 @@ export default function Home() {
                               d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                             />
                           </svg>
-                          Download Enhanced ✨
+                          Download Enhanced
                         </button>
                       </div>
                     </div>
@@ -760,9 +760,9 @@ export default function Home() {
                   <button
                     onClick={handleSubmit}
                     disabled={isLoading}
-                    className="relative group inline-flex items-center justify-center px-12 py-5 border-0 text-xl font-extrabold rounded-2xl text-white bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 hover:from-purple-700 hover:via-pink-700 hover:to-blue-700 disabled:from-gray-400 disabled:via-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed transition-all duration-300 shadow-2xl hover:shadow-purple-500/50 transform hover:scale-110 disabled:transform-none disabled:shadow-lg"
+                    className="relative group inline-flex items-center justify-center px-12 py-5 border-0 text-xl font-extrabold rounded-2xl text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 hover:from-blue-700 hover:via-indigo-700 hover:to-blue-700 disabled:from-gray-400 disabled:via-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed transition-all duration-300 shadow-2xl hover:shadow-blue-500/50 transform hover:scale-110 disabled:transform-none disabled:shadow-lg"
                   >
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
                     <span className="relative flex items-center">
                       {isLoading ? (
                         <>
@@ -786,7 +786,7 @@ export default function Home() {
                               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                             ></path>
                           </svg>
-                          Processing Magic...
+                          Processing...
                         </>
                       ) : (
                         <>
@@ -803,7 +803,7 @@ export default function Home() {
                               d="M13 10V3L4 14h7v7l9-11h-7z"
                             />
                           </svg>
-                          ✨ Enhance Image
+                          Enhance Image
                         </>
                       )}
                     </span>
@@ -839,10 +839,10 @@ export default function Home() {
 
           {/* Info Section */}
           <div
-            className={`mt-12 rounded-3xl p-10 border transition-all duration-300 backdrop-blur-sm ${
+            className={`mt-12 rounded-2xl p-10 border transition-all duration-300 backdrop-blur-sm ${
               darkMode
-                ? "bg-gradient-to-br from-blue-900/30 via-purple-900/30 to-pink-900/30 border-blue-500/30 shadow-xl"
-                : "bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 border-blue-200 shadow-xl"
+                ? "bg-gradient-to-br from-blue-900/30 via-indigo-900/30 to-blue-900/30 border-blue-500/30 shadow-xl"
+                : "bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-50 border-blue-200 shadow-xl"
             }`}
           >
             <div className="flex items-start space-x-5">
@@ -866,14 +866,14 @@ export default function Home() {
                 </svg>
               </div>
               <div className="flex-1">
-                <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 bg-clip-text text-transparent">
                   About Our Hybrid AI Model
                 </h3>
                 <div className="space-y-4">
                   <p className="text-gray-700 dark:text-gray-300 text-base leading-relaxed">
-                    Our cutting-edge hybrid model seamlessly combines the strengths of{" "}
-                    <span className="font-bold text-purple-600 dark:text-purple-400">LIME (Low-Light Image Enhancement)</span> and{" "}
-                    <span className="font-bold text-pink-600 dark:text-pink-400">Zero-DCE (Zero-Reference Deep Curve Estimation)</span> algorithms.
+                    Our advanced hybrid model combines the strengths of{" "}
+                    <span className="font-bold text-blue-600 dark:text-blue-400">LIME (Low-Light Image Enhancement)</span> and{" "}
+                    <span className="font-bold text-indigo-600 dark:text-indigo-400">Zero-DCE (Zero-Reference Deep Curve Estimation)</span> algorithms.
                   </p>
                   
                   <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 p-5 rounded-2xl ${
@@ -882,7 +882,7 @@ export default function Home() {
                     <div className="flex items-start space-x-3">
                       <div className="flex-shrink-0 mt-1">
                         <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                          darkMode ? "bg-purple-600/30" : "bg-purple-200"
+                          darkMode ? "bg-blue-600/30" : "bg-blue-200"
                         }`}>
                           <svg className="w-4 h-4 text-purple-600 dark:text-purple-400" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -898,7 +898,7 @@ export default function Home() {
                     <div className="flex items-start space-x-3">
                       <div className="flex-shrink-0 mt-1">
                         <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                          darkMode ? "bg-pink-600/30" : "bg-pink-200"
+                          darkMode ? "bg-indigo-600/30" : "bg-indigo-200"
                         }`}>
                           <svg className="w-4 h-4 text-pink-600 dark:text-pink-400" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -930,7 +930,7 @@ export default function Home() {
                     <div className="flex items-start space-x-3">
                       <div className="flex-shrink-0 mt-1">
                         <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                          darkMode ? "bg-green-600/30" : "bg-green-200"
+                          darkMode ? "bg-indigo-600/30" : "bg-indigo-200"
                         }`}>
                           <svg className="w-4 h-4 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -979,8 +979,7 @@ export default function Home() {
             {/* Image Title */}
             <div className="text-center mb-6">
               <div className="inline-block">
-                <h3 className="text-white text-2xl font-bold px-6 py-3 rounded-2xl bg-gradient-to-r from-purple-600/30 via-pink-600/30 to-blue-600/30 backdrop-blur-md border border-white/20">
-                  {fullscreenImage.type === "Enhanced" && "✨ "}
+                <h3 className="text-white text-2xl font-bold px-6 py-3 rounded-2xl bg-gradient-to-r from-blue-600/30 via-indigo-600/30 to-blue-600/30 backdrop-blur-md border border-white/20">
                   {fullscreenImage.type} Image
                 </h3>
               </div>
@@ -988,7 +987,7 @@ export default function Home() {
             
             {/* Image Container */}
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-3xl blur-2xl opacity-20"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 rounded-3xl blur-2xl opacity-20"></div>
               <img
                 src={fullscreenImage.src}
                 alt={fullscreenImage.type}
@@ -1003,7 +1002,7 @@ export default function Home() {
                   fullscreenImage.src, 
                   `${fullscreenImage.type.toLowerCase()}-image.jpg`
                 )}
-                className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold rounded-2xl transition-all duration-200 shadow-2xl hover:shadow-green-500/50 transform hover:scale-105"
+                className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-2xl transition-all duration-200 shadow-2xl hover:shadow-blue-500/50 transform hover:scale-105"
               >
                 <svg
                   className="w-5 h-5 mr-3"
