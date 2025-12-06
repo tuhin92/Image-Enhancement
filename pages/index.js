@@ -165,7 +165,7 @@ export default function Home() {
       className={`min-h-screen transition-colors duration-300 ${
         darkMode
           ? "bg-gray-950 text-white"
-          : "bg-gradient-to-br from-blue-50 via-indigo-50 to-blue-100 text-gray-900"
+          : "bg-slate-200 text-gray-900"
       }`}
     >
       <Head>
@@ -181,9 +181,9 @@ export default function Home() {
       <header className={`sticky top-0 z-50 backdrop-blur-lg border-b transition-colors duration-300 ${
         darkMode 
           ? "bg-gray-900/80 border-gray-800" 
-          : "bg-white/95 border-blue-200 shadow-md"
+          : "bg-slate-200/95 border-blue-200 shadow-md"
       }`}>
-        <div className="container mx-auto px-20 py-5">
+        <div className="container mx-auto px-20 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="relative group">
