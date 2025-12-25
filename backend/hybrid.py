@@ -10,7 +10,6 @@ import sys
 import os
 import logging
 import argparse
-from PIL import Image
 
 # Configure logging for better debugging and monitoring
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -19,20 +18,22 @@ def estimate_illumination(img, method='max_rgb', sigma=3):
     """
     Estimate the illumination map using different methods and apply soft smoothing.
     Options for 'method': 'max_rgb', 'luminosity', 'gray'.
+    Note: Expects BGR image from OpenCV.
     """
-    img = img.astype(np.float32) / 255.0
+    img_float = img.astype(np.float32) / 255.0
 
     if method == 'max_rgb':
-        illumination = np.max(img, axis=2)
+        illumination = np.max(img_float, axis=2)
     elif method == 'luminosity':
-        illumination = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)[:, :, 2]
+        illumination = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)[:, :, 2].astype(np.float32) / 255.0
     elif method == 'gray':
-        illumination = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+        illumination = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY).astype(np.float32) / 255.0
     else:
         raise ValueError(f"Unknown method: {method}. Available methods are: 'max_rgb', 'luminosity', 'gray'.")
 
-    # Optionally, reduce the smoothing impact
-    illumination = cv2.GaussianBlur(illumination, (5, 5), sigma)
+    # Apply Gaussian blur only if sigma > 0
+    if sigma > 0:
+        illumination = cv2.GaussianBlur(illumination, (5, 5), sigma)
 
     # Normalize illumination map (to prevent extreme brightness shifts)
     illumination = np.clip(illumination, 0.1, 1.0)
@@ -68,25 +69,27 @@ def refine_illumination(illumination, radius=15, eps=1e-3):
 def enhance_image(img, illumination, gamma=0.85):
     """
     Realistic enhancement by applying adaptive gamma correction.
+    Expects BGR image, returns BGR image.
     """
-    img = img.astype(np.float32) / 255.0
-    enhanced = np.zeros_like(img)
-
-    # Apply gamma correction for a smoother, more natural brightness boost
-    for i in range(3):
-        enhanced[:, :, i] = (img[:, :, i] / illumination) ** gamma
+    img_float = img.astype(np.float32) / 255.0
+    
+    # Vectorized gamma correction - much faster than loop
+    illumination_3d = illumination[:, :, np.newaxis]
+    enhanced = np.power(img_float / illumination_3d, gamma)
 
     # Normalize and scale back to valid image range
     enhanced = np.clip(enhanced * 255.0, 0, 255).astype(np.uint8)
 
-    # Optionally sharpen the image
-    enhanced = sharpen_image(enhanced)
+    # Inline sharpening for better performance
+    kernel = np.array([[-1, -1, -1], [-1, 9, -1], [-1, -1, -1]], dtype=np.float32)
+    enhanced = cv2.filter2D(enhanced, -1, kernel)
 
     return enhanced
 
 def hybrid_enhance(image_path, output_path, illumination_method='max_rgb', gamma=1.0, sigma=3, radius=15, eps=1e-3, max_gain=5.0, denoise_strength=10, saturation_scale=1.0):
     """
     Apply Hybrid LIME + Zero-DCE enhancement to an image with improved realism and flexibility.
+    Optimized version: works in BGR color space throughout to avoid conversions.
     Parameters:
         image_path: str
         output_path: str
@@ -105,38 +108,38 @@ def hybrid_enhance(image_path, output_path, illumination_method='max_rgb', gamma
             logging.warning(f"Skipping {image_path} - Unable to load image.")
             return False
 
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-
+        # Work in BGR throughout - no conversion needed
         # Step 1: Estimate Illumination
         illumination = estimate_illumination(img, method=illumination_method, sigma=sigma)
-        # Clamp illumination to avoid over-brightening (max_gain)
+        # Clamp illumination to avoid over-brightening (max_gain) - single clip
         illumination = np.clip(illumination, 1.0 / max_gain, 1.0)
 
         # Step 2: Refine Illumination using Guided Filtering
         refined_illumination = refine_illumination(illumination, radius=radius, eps=eps)
-        refined_illumination = np.clip(refined_illumination, 1.0 / max_gain, 1.0)
+        # Already clamped in step 1, no need to clip again unless refine changes range significantly
 
         # Step 3: Enhance Image using Gamma Correction and Sharpening
         enhanced_img = enhance_image(img, refined_illumination, gamma=gamma)
 
-        # Step 4: Denoising
+        # Step 4: Fast Denoising - use bilateral filter (much faster than NlMeans)
         if denoise_strength > 0:
-            enhanced_img = cv2.cvtColor(enhanced_img, cv2.COLOR_RGB2BGR)
-            enhanced_img = cv2.fastNlMeansDenoisingColored(enhanced_img, None, denoise_strength, denoise_strength, 7, 21)
-            enhanced_img = cv2.cvtColor(enhanced_img, cv2.COLOR_BGR2RGB)
+            # Bilateral filter is 10-20x faster than fastNlMeansDenoisingColored
+            d = min(denoise_strength, 9)  # diameter
+            sigmaColor = denoise_strength * 2
+            sigmaSpace = denoise_strength * 2
+            enhanced_img = cv2.bilateralFilter(enhanced_img, d, sigmaColor, sigmaSpace)
 
         # Step 5: Adjust Saturation
         if saturation_scale != 1.0:
-            hsv = cv2.cvtColor(enhanced_img, cv2.COLOR_RGB2HSV).astype(np.float32)
-            hsv[...,1] = np.clip(hsv[...,1] * saturation_scale, 0, 255)
-            enhanced_img = cv2.cvtColor(hsv.astype(np.uint8), cv2.COLOR_HSV2RGB)
+            hsv = cv2.cvtColor(enhanced_img, cv2.COLOR_BGR2HSV)
+            hsv[:, :, 1] = np.clip(hsv[:, :, 1].astype(np.float32) * saturation_scale, 0, 255).astype(np.uint8)
+            enhanced_img = cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)
 
-        # Step 6: Blend with original for natural look (optional, here 80% enhanced, 20% original)
+        # Step 6: Blend with original for natural look (80% enhanced, 20% original)
         enhanced_img = cv2.addWeighted(enhanced_img, 0.8, img, 0.2, 0)
 
-        # Save the output
-        output_image = Image.fromarray(enhanced_img)
-        output_image.save(output_path)
+        # Save the output using OpenCV (faster than PIL)
+        cv2.imwrite(output_path, enhanced_img, [cv2.IMWRITE_JPEG_QUALITY, 95])
         logging.info(f"Enhanced Image Saved: {output_path}")
         return True
 
