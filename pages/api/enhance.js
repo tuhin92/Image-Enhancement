@@ -127,8 +127,8 @@ export default async function handler(req, res) {
       
       // Clean up temporary files
       try {
-        fs.unlinkSync(inputPath);
-        fs.unlinkSync(outputPath);
+        // fs.unlinkSync(inputPath);
+        // fs.unlinkSync(outputPath);
         console.log('Temporary files cleaned up');
       } catch (cleanupError) {
         console.error('Error cleaning up files:', cleanupError);
