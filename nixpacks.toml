@@ -2,7 +2,7 @@
 # This file tells Railway to install both Node.js and Python
 
 [phases.setup]
-nixPkgs = ['nodejs-20_x', 'python310', 'python310Packages.pip']
+nixPkgs = ['nodejs_20', 'python310', 'python310Packages.pip']
 
 [phases.install]
 cmds = [
