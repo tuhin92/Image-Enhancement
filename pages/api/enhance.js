@@ -120,6 +120,14 @@ export default async function handler(req, res) {
           env: {
             ...process.env,
             PYTHONUNBUFFERED: '1',
+            // Reduce CPU/memory pressure on small containers (common cause of SIGKILL/OOM)
+            OMP_NUM_THREADS: process.env.OMP_NUM_THREADS || '1',
+            OPENBLAS_NUM_THREADS: process.env.OPENBLAS_NUM_THREADS || '1',
+            MKL_NUM_THREADS: process.env.MKL_NUM_THREADS || '1',
+            NUMEXPR_NUM_THREADS: process.env.NUMEXPR_NUM_THREADS || '1',
+            VECLIB_MAXIMUM_THREADS: process.env.VECLIB_MAXIMUM_THREADS || '1',
+            // Controls downscaling in backend/hybrid.py; lower = less RAM
+            MAX_IMAGE_DIM: process.env.MAX_IMAGE_DIM || '900',
           },
         }
       );
