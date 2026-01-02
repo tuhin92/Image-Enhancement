@@ -111,14 +111,18 @@ export default async function handler(req, res) {
       console.log('Python script exists:', fs.existsSync(pythonScriptPath));
       console.log('Input file exists:', fs.existsSync(inputPath));
       
-      const { stdout, stderr } = await execFileAsync(pythonCmd, [
-        pythonScriptPath,
-        inputPath,
-        outputPath
-      ], {
-        timeout: 60000, // 60 second timeout
-        maxBuffer: 10 * 1024 * 1024 // 10MB buffer
-      });
+      const { stdout, stderr } = await execFileAsync(
+        pythonCmd,
+        ['-u', pythonScriptPath, inputPath, outputPath],
+        {
+          timeout: 180000, // 3 minute timeout (Railway can be slower than local)
+          maxBuffer: 10 * 1024 * 1024, // 10MB buffer
+          env: {
+            ...process.env,
+            PYTHONUNBUFFERED: '1',
+          },
+        }
+      );
 
       console.log('Python stdout:', stdout);
       if (stderr) {
@@ -174,6 +178,9 @@ export default async function handler(req, res) {
       return res.status(500).json({ 
         error: 'Failed to enhance image',
         details: pythonError.message,
+        code: pythonError.code ?? null,
+        signal: pythonError.signal ?? null,
+        killed: pythonError.killed ?? null,
         stderr: pythonError.stderr || 'No stderr output',
         stdout: pythonError.stdout || 'No stdout output'
       });
