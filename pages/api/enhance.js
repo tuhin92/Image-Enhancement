@@ -126,8 +126,9 @@ export default async function handler(req, res) {
             MKL_NUM_THREADS: process.env.MKL_NUM_THREADS || '1',
             NUMEXPR_NUM_THREADS: process.env.NUMEXPR_NUM_THREADS || '1',
             VECLIB_MAXIMUM_THREADS: process.env.VECLIB_MAXIMUM_THREADS || '1',
-            // Controls downscaling in backend/hybrid.py; lower = less RAM
-            MAX_IMAGE_DIM: process.env.MAX_IMAGE_DIM || '900',
+            // Controls downscaling in backend/hybrid.py; lower = less RAM, higher = better quality.
+            // If Railway runs out of memory, set MAX_IMAGE_DIM back to 900 (or lower) in Railway Variables.
+            MAX_IMAGE_DIM: process.env.MAX_IMAGE_DIM || '1600',
           },
         }
       );

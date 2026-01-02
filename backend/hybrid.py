@@ -75,11 +75,16 @@ def estimate_illumination(img, method='max_rgb', sigma=3):
 
 def sharpen_image(img, alpha=1.5, beta=0.5):
     """
-    Apply sharpening using an unsharp mask or custom kernel.
+    Apply mild sharpening using an unsharp mask.
     """
-    kernel = np.array([[-1, -1, -1], [-1, 9, -1], [-1, -1, -1]])  # Sharpening kernel
-    sharpened = cv2.filter2D(img, -1, kernel)
-    return sharpened
+    # alpha/beta kept for backward compatibility; alpha controls strength.
+    amount = max(0.0, float(alpha) - 1.0)
+    if amount <= 0.0:
+        return img
+
+    blurred = cv2.GaussianBlur(img, (0, 0), 1.0)
+    sharpened = cv2.addWeighted(img, 1.0 + amount, blurred, -amount, 0)
+    return np.clip(sharpened, 0, 255).astype(np.uint8)
 
 def refine_illumination(illumination, radius=15, eps=1e-3):
     """
@@ -108,18 +113,15 @@ def enhance_image(img, illumination, gamma=0.85):
     
     # Vectorized gamma correction - much faster than loop
     illumination_3d = illumination[:, :, np.newaxis]
-    enhanced = np.power(img_float / illumination_3d, gamma)
+    # Avoid division artifacts on very dark pixels
+    enhanced = np.power(img_float / (illumination_3d + 1e-6), gamma)
 
     # Normalize and scale back to valid image range
     enhanced = np.clip(enhanced * 255.0, 0, 255).astype(np.uint8)
 
-    # Inline sharpening for better performance
-    kernel = np.array([[-1, -1, -1], [-1, 9, -1], [-1, -1, -1]], dtype=np.float32)
-    enhanced = cv2.filter2D(enhanced, -1, kernel)
-
     return enhanced
 
-def hybrid_enhance(image_path, output_path, illumination_method='max_rgb', gamma=1.0, sigma=3, radius=15, eps=1e-3, max_gain=5.0, denoise_strength=10, saturation_scale=1.0, img=None):
+def hybrid_enhance(image_path, output_path, illumination_method='max_rgb', gamma=0.85, sigma=3, radius=15, eps=1e-3, max_gain=5.0, denoise_strength=10, saturation_scale=1.0, img=None):
     """
     Apply Hybrid LIME + Zero-DCE enhancement to an image with improved realism and flexibility.
     Optimized version: works in BGR color space throughout to avoid conversions.
@@ -172,6 +174,9 @@ def hybrid_enhance(image_path, output_path, illumination_method='max_rgb', gamma
         # Step 6: Blend with original for natural look (80% enhanced, 20% original)
         enhanced_img = cv2.addWeighted(enhanced_img, 0.8, img, 0.2, 0)
 
+        # Step 7: Final mild sharpen (after denoise/blend for cleaner detail)
+        enhanced_img = sharpen_image(enhanced_img, alpha=1.4)
+
         # Save the output using OpenCV (faster than PIL)
         cv2.imwrite(output_path, enhanced_img, [cv2.IMWRITE_JPEG_QUALITY, 95])
         logging.info(f"Enhanced Image Saved: {output_path}")
@@ -216,7 +221,7 @@ def main():
 
         # Reduce memory usage on low-RAM hosts (e.g., Railway) by downscaling.
         # Set MAX_IMAGE_DIM=0 to disable.
-        max_dim_env = os.environ.get('MAX_IMAGE_DIM', '900')
+        max_dim_env = os.environ.get('MAX_IMAGE_DIM', '1600')
         try:
             max_dim = int(max_dim_env)
         except ValueError:
