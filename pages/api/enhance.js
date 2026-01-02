@@ -107,11 +107,18 @@ export default async function handler(req, res) {
         ? '/opt/venv/bin/python3' 
         : 'python';
       
+      console.log('Using Python command:', pythonCmd);
+      console.log('Python script exists:', fs.existsSync(pythonScriptPath));
+      console.log('Input file exists:', fs.existsSync(inputPath));
+      
       const { stdout, stderr } = await execFileAsync(pythonCmd, [
         pythonScriptPath,
         inputPath,
         outputPath
-      ]);
+      ], {
+        timeout: 60000, // 60 second timeout
+        maxBuffer: 10 * 1024 * 1024 // 10MB buffer
+      });
 
       console.log('Python stdout:', stdout);
       if (stderr) {
@@ -148,7 +155,10 @@ export default async function handler(req, res) {
 
     } catch (pythonError) {
       console.error('Python script error:', pythonError);
-      console.error('Python error details:', pythonError.message);
+      console.error('Python error message:', pythonError.message);
+      console.error('Python error code:', pythonError.code);
+      console.error('Python stdout:', pythonError.stdout);
+      console.error('Python stderr:', pythonError.stderr);
       console.error('Python error stack:', pythonError.stack);
       
       // Clean up input file on error
@@ -162,8 +172,10 @@ export default async function handler(req, res) {
       }
 
       return res.status(500).json({ 
-        error: 'Failed to enhance image. Please check if Python and required libraries are installed.',
-        details: pythonError.message 
+        error: 'Failed to enhance image',
+        details: pythonError.message,
+        stderr: pythonError.stderr || 'No stderr output',
+        stdout: pythonError.stdout || 'No stdout output'
       });
     }
 
