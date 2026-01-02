@@ -14,6 +14,29 @@ import argparse
 # Configure logging for better debugging and monitoring
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+def maybe_downscale(img, max_dim):
+    """Downscale large images to reduce RAM usage.
+
+    Keeps aspect ratio. If max_dim is falsy or image already small enough,
+    returns the original image.
+    """
+    if not max_dim:
+        return img
+    try:
+        h, w = img.shape[:2]
+        current_max = max(h, w)
+        if current_max <= max_dim:
+            return img
+
+        scale = float(max_dim) / float(current_max)
+        new_w = max(1, int(round(w * scale)))
+        new_h = max(1, int(round(h * scale)))
+        logging.info(f"Downscaling image from {w}x{h} -> {new_w}x{new_h} to reduce memory")
+        return cv2.resize(img, (new_w, new_h), interpolation=cv2.INTER_AREA)
+    except Exception as e:
+        logging.warning(f"Downscale skipped due to error: {e}")
+        return img
+
 def estimate_illumination(img, method='max_rgb', sigma=3):
     """
     Estimate the illumination map using different methods and apply soft smoothing.
@@ -179,6 +202,16 @@ def main():
             sys.exit(1)
         
         print(f"Image shape: {img.shape}")
+
+        # Reduce memory usage on low-RAM hosts (e.g., Railway) by downscaling.
+        # Set MAX_IMAGE_DIM=0 to disable.
+        max_dim_env = os.environ.get('MAX_IMAGE_DIM', '1600')
+        try:
+            max_dim = int(max_dim_env)
+        except ValueError:
+            max_dim = 1600
+        img = maybe_downscale(img, max_dim if max_dim > 0 else 0)
+        print(f"Processing shape: {img.shape}")
         
         # Enhance the image
         print("Enhancing image using Hybrid LIME + Zero-DCE algorithm...")
