@@ -7,11 +7,12 @@ nixPkgs = ['nodejs_20', 'python310', 'python310Packages.pip']
 [phases.install]
 cmds = [
   'npm install',
-  'pip install -r requirements.txt'
+  'python3 -m venv /opt/venv',
+  '. /opt/venv/bin/activate && pip install -r requirements.txt'
 ]
 
 [phases.build]
 cmds = ['npm run build']
 
 [start]
-cmd = 'npm run start'
+cmd = '. /opt/venv/bin/activate && npm run start'
