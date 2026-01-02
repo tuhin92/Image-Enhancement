@@ -874,7 +874,7 @@ export default function Home() {
               </div>
               <div className="flex-1">
                 <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 bg-clip-text text-transparent">
-                  About Our Hybrid AI Model
+                  About Our Hybrid Model
                 </h3>
                 <div className="space-y-4">
                   <p className="text-gray-700 dark:text-gray-300 text-base leading-relaxed">
