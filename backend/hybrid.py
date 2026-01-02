@@ -205,7 +205,7 @@ def main():
 
         # Reduce memory usage on low-RAM hosts (e.g., Railway) by downscaling.
         # Set MAX_IMAGE_DIM=0 to disable.
-        max_dim_env = os.environ.get('MAX_IMAGE_DIM', '1600')
+        max_dim_env = os.environ.get('MAX_IMAGE_DIM', '900')
         try:
             max_dim = int(max_dim_env)
         except ValueError:
