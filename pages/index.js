@@ -1020,7 +1020,7 @@ export default function Home() {
                 Image Enhancement Platform
               </h3>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                AI-Powered Low-Light Enhancement
+                Low-Light image enhancement by Hybrid Model
               </p>
             </div>
 
