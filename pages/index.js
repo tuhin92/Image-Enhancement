@@ -183,14 +183,14 @@ export default function Home() {
           ? "bg-gray-900/80 border-gray-800" 
           : "bg-slate-200/95 border-blue-200 shadow-md"
       }`}>
-        <div className="container mx-auto px-20 py-3">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-4">
               <div className="relative group">
                 <div className="absolute inset-0 bg-blue-500 rounded-xl blur opacity-60 group-hover:opacity-90 transition duration-300"></div>
-                <div className="relative inline-flex items-center justify-center w-12 h-12 bg-blue-600 rounded-xl shadow-lg">
+                <div className="relative inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 rounded-xl shadow-lg">
                   <svg
-                    className="w-7 h-7 text-white"
+                    className="w-5 h-5 sm:w-7 sm:h-7 text-white"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -205,32 +205,32 @@ export default function Home() {
                 </div>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+                <h1 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 dark:text-white">
                   Image Enhancement Platform
                 </h1>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Hybrid LIME + Zero-DCE Technology</p>
+                <p className="text-xs sm:text-xs text-gray-500 dark:text-gray-400 mt-0.5 hidden sm:block">Hybrid LIME + Zero-DCE Technology</p>
               </div>
             </div>
 
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
-              className={`relative w-20 h-10 rounded-full transition-all duration-300 ${
+              className={`relative w-16 h-8 sm:w-20 sm:h-10 rounded-full transition-all duration-300 flex-shrink-0 ${
                 darkMode
                   ? "bg-gray-700"
                   : "bg-gray-300"
               }`}
             >
               <div
-                className={`absolute top-1 left-1 w-8 h-8 rounded-full transition-all duration-300 flex items-center justify-center ${
+                className={`absolute top-1 left-1 w-6 h-6 sm:w-8 sm:h-8 rounded-full transition-all duration-300 flex items-center justify-center ${
                   darkMode
-                    ? "translate-x-10 bg-gray-900"
+                    ? "translate-x-8 sm:translate-x-10 bg-gray-900"
                     : "translate-x-0 bg-white"
                 }`}
               >
                 {darkMode ? (
                   <svg
-                    className="w-5 h-5 text-yellow-300"
+                    className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-300"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -238,7 +238,7 @@ export default function Home() {
                   </svg>
                 ) : (
                   <svg
-                    className="w-5 h-5 text-yellow-500"
+                    className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-500"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -255,15 +255,15 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="container mx-auto px-6 py-12">
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-8 sm:py-12">
         <div className="max-w-7xl mx-auto">
           {/* Welcome Section */}
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold mb-4 text-blue-600 dark:text-blue-300 tracking-tight">
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 text-blue-600 dark:text-blue-300 tracking-tight px-2">
               Professional Image Enhancement
             </h2>
-            <div className="mx-auto h-0.5 w-32 bg-blue-500/60 rounded-full mb-6" />
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            <div className="mx-auto h-0.5 w-24 sm:w-32 bg-blue-500/60 rounded-full mb-4 sm:mb-6" />
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed px-2">
               Low-Light image enhancement by {" "}
               <span className="font-semibold text-blue-600 dark:text-blue-300">
                 Hybrid LIME and Zero-DCE Models
@@ -275,21 +275,21 @@ export default function Home() {
           {/* Upload Section - Hidden after image selection */}
           {!originalImage && (
             <div
-              className={`rounded-2xl p-10 mb-8 border transition-all duration-300 backdrop-blur-sm ${
+              className={`rounded-2xl p-4 sm:p-6 lg:p-10 mb-6 sm:mb-8 border transition-all duration-300 backdrop-blur-sm ${
                 darkMode
                   ? "bg-gradient-to-br from-gray-800/90 to-gray-900/90 border-blue-500/30 shadow-2xl shadow-blue-900/20"
                   : "bg-white/95 border-blue-300 shadow-2xl shadow-blue-200/60"
               }`}
             >
-              <div className="flex items-center justify-between mb-8">
-                <h3 className="text-2xl font-bold dark:text-white flex items-center">
-                  <div className={`p-3 rounded-xl mr-4 ${
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-3 sm:gap-0">
+                <h3 className="text-xl sm:text-2xl font-bold dark:text-white flex items-center">
+                  <div className={`p-2 sm:p-3 rounded-xl mr-3 sm:mr-4 ${
                     darkMode 
                       ? "bg-gradient-to-br from-blue-600/20 to-indigo-600/20" 
                       : "bg-gradient-to-br from-blue-200 to-indigo-200"
                   }`}>
                     <svg
-                      className="w-6 h-6 text-purple-600 dark:text-purple-400"
+                      className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -302,9 +302,9 @@ export default function Home() {
                       />
                     </svg>
                   </div>
-                  <span>
-                    Upload Your Image
-                    <span className={`ml-3 text-sm font-normal px-3 py-1 rounded-full ${
+                  <span className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                    <span>Upload Your Image</span>
+                    <span className={`text-xs sm:text-sm font-normal px-3 py-1 rounded-full inline-block ${
                       darkMode 
                         ? "bg-blue-600/20 text-blue-300" 
                         : "bg-blue-100 text-blue-700"
@@ -317,7 +317,7 @@ export default function Home() {
 
               {/* Drag & Drop Area */}
               <div
-                className={`relative border-2 border-dashed rounded-3xl p-16 text-center transition-all duration-300 overflow-hidden ${
+                className={`relative border-2 border-dashed rounded-2xl sm:rounded-3xl p-8 sm:p-12 lg:p-16 text-center transition-all duration-300 overflow-hidden ${
                   dragActive
                     ? "border-blue-500 bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-purple-900/30 dark:to-pink-900/30 scale-[1.02]"
                     : darkMode
@@ -333,14 +333,14 @@ export default function Home() {
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-blue-500/10 animate-pulse"></div>
                 )}
                 
-                <div className="relative space-y-8">
-                  <div className={`mx-auto w-20 h-20 rounded-2xl flex items-center justify-center ${
+                <div className="relative space-y-4 sm:space-y-6 lg:space-y-8">
+                  <div className={`mx-auto w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center ${
                     darkMode 
                       ? "bg-gradient-to-br from-blue-600 to-indigo-600 shadow-lg shadow-blue-500/50" 
                       : "bg-gradient-to-br from-blue-500 to-indigo-500 shadow-lg shadow-blue-400/50"
                   }`}>
                     <svg
-                      className="h-10 w-10 text-white"
+                      className="h-8 w-8 sm:h-10 sm:w-10 text-white"
                       stroke="currentColor"
                       fill="none"
                       viewBox="0 0 48 48"
@@ -354,19 +354,19 @@ export default function Home() {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-2xl font-bold dark:text-white mb-3">
+                    <p className="text-lg sm:text-xl lg:text-2xl font-bold dark:text-white mb-2 sm:mb-3 px-2">
                       {dragActive
                         ? "Drop your image here"
                         : "Drag and drop your image here"}
                     </p>
-                    <p className="text-gray-500 dark:text-gray-400 text-lg">or</p>
+                    <p className="text-gray-500 dark:text-gray-400 text-base sm:text-lg">or</p>
                   </div>
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="relative inline-flex items-center px-10 py-5 border-0 text-lg font-bold rounded-2xl text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 hover:from-blue-700 hover:via-indigo-700 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 transition-all duration-200 shadow-2xl hover:shadow-blue-500/50 hover:scale-105 transform"
+                    className="relative inline-flex items-center px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 border-0 text-base sm:text-lg font-bold rounded-xl sm:rounded-2xl text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 hover:from-blue-700 hover:via-indigo-700 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 transition-all duration-200 shadow-2xl hover:shadow-blue-500/50 hover:scale-105 transform"
                   >
                     <svg
-                      className="w-6 h-6 mr-3"
+                      className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -438,21 +438,21 @@ export default function Home() {
           {/* Image Preview Section */}
           {originalImage && (
             <div
-              className={`rounded-2xl p-10 border transition-all duration-300 backdrop-blur-sm ${
+              className={`rounded-2xl p-4 sm:p-6 lg:p-10 border transition-all duration-300 backdrop-blur-sm ${
                 darkMode
                   ? "bg-gradient-to-br from-gray-800/90 to-gray-900/90 border-blue-500/30 shadow-2xl shadow-blue-900/20"
                   : "bg-white/90 border-blue-200 shadow-2xl shadow-blue-100/50"
               }`}
             >
-              <div className="flex items-center justify-between mb-10">
-                <h3 className="text-2xl font-bold dark:text-white flex items-center">
-                  <div className={`p-3 rounded-xl mr-4 ${
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 lg:mb-10 gap-3 sm:gap-0">
+                <h3 className="text-xl sm:text-2xl font-bold dark:text-white flex items-center">
+                  <div className={`p-2 sm:p-3 rounded-xl mr-3 sm:mr-4 ${
                     darkMode 
                       ? "bg-gradient-to-br from-green-600/20 to-emerald-600/20" 
                       : "bg-gradient-to-br from-green-100 to-emerald-100"
                   }`}>
                     <svg
-                      className="w-6 h-6 text-green-600 dark:text-green-400"
+                      className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 dark:text-green-400"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -465,9 +465,9 @@ export default function Home() {
                       />
                     </svg>
                   </div>
-                  <span>
-                    Compare Results
-                    <span className={`ml-3 text-sm font-normal px-3 py-1 rounded-full ${
+                  <span className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                    <span>Compare Results</span>
+                    <span className={`text-xs sm:text-sm font-normal px-3 py-1 rounded-full inline-block ${
                       darkMode 
                         ? "bg-blue-600/20 text-blue-300" 
                         : "bg-blue-100 text-blue-700"
@@ -478,7 +478,7 @@ export default function Home() {
                 </h3>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mb-6 sm:mb-8 lg:mb-10">
                 {/* Original Image */}
                 <div className="space-y-5">
                   <div className="flex items-center justify-between mb-3">
@@ -763,11 +763,11 @@ export default function Home() {
 
               {/* Action Buttons - Inside Compare Results Box */}
               <div className="text-center pt-4">
-                <div className="inline-flex flex-col sm:flex-row items-center gap-5">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5">
                   <button
                     onClick={handleSubmit}
                     disabled={isLoading}
-                    className="relative group inline-flex items-center justify-center px-12 py-5 border-0 text-xl font-extrabold rounded-2xl text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 hover:from-blue-700 hover:via-indigo-700 hover:to-blue-700 disabled:from-gray-400 disabled:via-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed transition-all duration-300 shadow-2xl hover:shadow-blue-500/50 transform hover:scale-110 disabled:transform-none disabled:shadow-lg"
+                    className="relative group inline-flex items-center justify-center w-full sm:w-auto px-8 sm:px-10 lg:px-12 py-4 sm:py-5 border-0 text-lg sm:text-xl font-extrabold rounded-xl sm:rounded-2xl text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 hover:from-blue-700 hover:via-indigo-700 hover:to-blue-700 disabled:from-gray-400 disabled:via-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed transition-all duration-300 shadow-2xl hover:shadow-blue-500/50 transform hover:scale-110 disabled:transform-none disabled:shadow-lg"
                   >
                     <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
                     <span className="relative flex items-center">
@@ -818,7 +818,7 @@ export default function Home() {
 
                   <button
                     onClick={handleReset}
-                    className={`px-10 py-5 border-2 text-lg font-bold rounded-2xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 ${
+                    className={`w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 border-2 text-base sm:text-lg font-bold rounded-xl sm:rounded-2xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 ${
                       darkMode 
                         ? "border-gray-600 text-gray-300 bg-gray-800 hover:bg-gray-700 hover:border-gray-500" 
                         : "border-gray-300 text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400"
@@ -846,20 +846,20 @@ export default function Home() {
 
           {/* Info Section */}
           <div
-            className={`mt-12 rounded-2xl p-10 border transition-all duration-300 backdrop-blur-sm ${
+            className={`mt-8 sm:mt-10 lg:mt-12 rounded-2xl p-4 sm:p-6 lg:p-10 border transition-all duration-300 backdrop-blur-sm ${
               darkMode
                 ? "bg-gradient-to-br from-blue-900/30 via-indigo-900/30 to-blue-900/30 border-blue-500/30 shadow-xl"
                 : "bg-gradient-to-br from-white/90 via-blue-50/90 to-indigo-50/90 border-blue-300 shadow-xl"
             }`}
           >
-            <div className="flex items-start space-x-5">
-              <div className={`flex-shrink-0 p-4 rounded-2xl ${
+            <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-5">
+              <div className={`flex-shrink-0 p-3 sm:p-4 rounded-2xl ${
                 darkMode 
                   ? "bg-gradient-to-br from-blue-600/20 to-purple-600/20" 
                   : "bg-gradient-to-br from-blue-100 to-purple-100"
               }`}>
                 <svg
-                  className="w-8 h-8 text-blue-600 dark:text-blue-400"
+                  className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600 dark:text-blue-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -873,7 +873,7 @@ export default function Home() {
                 </svg>
               </div>
               <div className="flex-1">
-                <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 bg-clip-text text-transparent">
+                <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 bg-clip-text text-transparent">
                   About Our Hybrid AI Model
                 </h3>
                 <div className="space-y-4">
@@ -883,7 +883,7 @@ export default function Home() {
                     <span className="font-bold text-indigo-600 dark:text-indigo-400">Zero-DCE (Zero-Reference Deep Curve Estimation)</span> algorithms.
                   </p>
                   
-                  <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 p-5 rounded-2xl ${
+                  <div className={`grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-4 sm:mt-6 p-4 sm:p-5 rounded-xl sm:rounded-2xl ${
                     darkMode ? "bg-black/20" : "bg-blue-50/80"
                   }`}>
                     <div className="flex items-start space-x-3">
