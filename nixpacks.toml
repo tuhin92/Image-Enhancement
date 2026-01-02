@@ -1,0 +1,17 @@
+# Railway Nixpacks Configuration
+# This file tells Railway to install both Node.js and Python
+
+[phases.setup]
+nixPkgs = ['nodejs-18_x', 'python310', 'python310Packages.pip']
+
+[phases.install]
+cmds = [
+  'npm install',
+  'pip install -r requirements.txt'
+]
+
+[phases.build]
+cmds = ['npm run build']
+
+[start]
+cmd = 'npm run start'

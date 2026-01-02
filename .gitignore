@@ -20,7 +20,8 @@ dist/
 .env.production.local
 
 # Uploads directory (temporary files)
-uploads/
+uploads/*
+!uploads/.gitkeep
 
 # Python
 __pycache__/
