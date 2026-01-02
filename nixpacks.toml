@@ -2,15 +2,27 @@
 # This file tells Railway to install both Node.js and Python
 
 [phases.setup]
-nixPkgs = ['nodejs_20', 'python310', 'python310Packages.pip', 'python310Packages.virtualenv']
-aptPkgs = ['libstdc++6', 'libgl1', 'libglib2.0-0', 'libsm6', 'libxext6', 'libxrender-dev', 'libgomp1', 'libgthread-2.0-0']
+nixPkgs = ['nodejs_20']
+aptPkgs = [
+  'python3',
+  'python3-venv',
+  'python3-pip',
+  'libstdc++6',
+  'libgl1',
+  'libglib2.0-0',
+  'libsm6',
+  'libxext6',
+  'libxrender-dev',
+  'libgomp1',
+  'libgthread-2.0-0'
+]
 
 [phases.install]
 cmds = [
-  'sudo apt-get update && sudo apt-get install -y libstdc++6 g++',
   'npm ci --legacy-peer-deps',
   'python3 -m venv /opt/venv',
-  '. /opt/venv/bin/activate && pip install --no-cache-dir -r requirements.txt'
+  '/opt/venv/bin/pip install --no-cache-dir --upgrade pip',
+  '/opt/venv/bin/pip install --no-cache-dir -r requirements.txt'
 ]
 
 [phases.build]
