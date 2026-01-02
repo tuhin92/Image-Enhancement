@@ -7,9 +7,9 @@ aptPkgs = ['libgl1', 'libglib2.0-0', 'libsm6', 'libxext6', 'libxrender-dev', 'li
 
 [phases.install]
 cmds = [
-  'npm install',
+  'npm ci --legacy-peer-deps',
   'python3 -m venv /opt/venv',
-  '. /opt/venv/bin/activate && pip install -r requirements.txt'
+  '. /opt/venv/bin/activate && pip install --no-cache-dir -r requirements.txt'
 ]
 
 [phases.build]
