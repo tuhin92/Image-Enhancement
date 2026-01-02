@@ -102,7 +102,12 @@ export default async function handler(req, res) {
     }
 
     try {
-      const { stdout, stderr } = await execFileAsync('python', [
+      // Use virtual environment Python if available (Railway), otherwise system Python
+      const pythonCmd = fs.existsSync('/opt/venv/bin/python3') 
+        ? '/opt/venv/bin/python3' 
+        : 'python';
+      
+      const { stdout, stderr } = await execFileAsync(pythonCmd, [
         pythonScriptPath,
         inputPath,
         outputPath
