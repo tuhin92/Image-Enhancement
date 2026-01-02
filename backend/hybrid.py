@@ -14,39 +14,6 @@ import argparse
 # Configure logging for better debugging and monitoring
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# Reduce CPU and memory pressure on constrained hosts (e.g., Railway)
-try:
-    cv2.setNumThreads(1)
-except Exception:
-    pass
-try:
-    cv2.ocl.setUseOpenCL(False)
-except Exception:
-    pass
-
-def maybe_downscale(img, max_dim):
-    """Downscale large images to reduce RAM usage.
-
-    Keeps aspect ratio. If max_dim is falsy or image already small enough,
-    returns the original image.
-    """
-    if not max_dim:
-        return img
-    try:
-        h, w = img.shape[:2]
-        current_max = max(h, w)
-        if current_max <= max_dim:
-            return img
-
-        scale = float(max_dim) / float(current_max)
-        new_w = max(1, int(round(w * scale)))
-        new_h = max(1, int(round(h * scale)))
-        logging.info(f"Downscaling image from {w}x{h} -> {new_w}x{new_h} to reduce memory")
-        return cv2.resize(img, (new_w, new_h), interpolation=cv2.INTER_AREA)
-    except Exception as e:
-        logging.warning(f"Downscale skipped due to error: {e}")
-        return img
-
 def estimate_illumination(img, method='max_rgb', sigma=3):
     """
     Estimate the illumination map using different methods and apply soft smoothing.
@@ -119,7 +86,7 @@ def enhance_image(img, illumination, gamma=0.85):
 
     return enhanced
 
-def hybrid_enhance(image_path, output_path, illumination_method='max_rgb', gamma=1.0, sigma=3, radius=15, eps=1e-3, max_gain=5.0, denoise_strength=10, saturation_scale=1.0, img=None):
+def hybrid_enhance(image_path, output_path, illumination_method='max_rgb', gamma=1.0, sigma=3, radius=15, eps=1e-3, max_gain=5.0, denoise_strength=10, saturation_scale=1.0):
     """
     Apply Hybrid LIME + Zero-DCE enhancement to an image with improved realism and flexibility.
     Optimized version: works in BGR color space throughout to avoid conversions.
@@ -136,11 +103,10 @@ def hybrid_enhance(image_path, output_path, illumination_method='max_rgb', gamma
         saturation_scale: float (scales the saturation after enhancement)
     """
     try:
+        img = cv2.imread(image_path)
         if img is None:
-            img = cv2.imread(image_path)
-            if img is None:
-                logging.warning(f"Skipping {image_path} - Unable to load image.")
-                return False
+            logging.warning(f"Skipping {image_path} - Unable to load image.")
+            return False
 
         # Work in BGR throughout - no conversion needed
         # Step 1: Estimate Illumination
@@ -213,16 +179,6 @@ def main():
             sys.exit(1)
         
         print(f"Image shape: {img.shape}")
-
-        # Reduce memory usage on low-RAM hosts (e.g., Railway) by downscaling.
-        # Set MAX_IMAGE_DIM=0 to disable.
-        max_dim_env = os.environ.get('MAX_IMAGE_DIM', '900')
-        try:
-            max_dim = int(max_dim_env)
-        except ValueError:
-            max_dim = 1600
-        img = maybe_downscale(img, max_dim if max_dim > 0 else 0)
-        print(f"Processing shape: {img.shape}")
         
         # Enhance the image
         print("Enhancing image using Hybrid LIME + Zero-DCE algorithm...")
@@ -233,8 +189,7 @@ def main():
             gamma=args.gamma,
             sigma=args.sigma,
             radius=args.radius,
-            eps=args.eps,
-            img=img
+            eps=args.eps
         )
         
         if success:
