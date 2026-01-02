@@ -7,6 +7,7 @@ aptPkgs = ['libstdc++6', 'libgl1', 'libglib2.0-0', 'libsm6', 'libxext6', 'libxre
 
 [phases.install]
 cmds = [
+  'sudo apt-get update && sudo apt-get install -y libstdc++6 g++',
   'npm ci --legacy-peer-deps',
   'python3 -m venv /opt/venv',
   '. /opt/venv/bin/activate && pip install --no-cache-dir -r requirements.txt'
