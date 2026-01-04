@@ -6,8 +6,19 @@ Usage: python metrics.py input.jpg output.jpg
 import sys
 import json
 import math
+import os
 import cv2
 import numpy as np
+
+# Reduce CPU and memory pressure on constrained hosts (e.g., Railway)
+try:
+    cv2.setNumThreads(1)
+except Exception:
+    pass
+try:
+    cv2.ocl.setUseOpenCL(False)
+except Exception:
+    pass
 
 
 def compute_mse(original, enhanced):
@@ -21,6 +32,28 @@ def compute_psnr(original, enhanced):
     if mse == 0:
         return float('inf')
     return 20.0 * math.log10(255.0 / math.sqrt(mse))
+
+
+def maybe_downscale(img, max_dim):
+    """Downscale large images to reduce RAM usage.
+    
+    Keeps aspect ratio. If max_dim is falsy or image already small enough,
+    returns the original image.
+    """
+    if not max_dim:
+        return img
+    try:
+        h, w = img.shape[:2]
+        current_max = max(h, w)
+        if current_max <= max_dim:
+            return img
+
+        scale = float(max_dim) / float(current_max)
+        new_w = max(1, int(round(w * scale)))
+        new_h = max(1, int(round(h * scale)))
+        return cv2.resize(img, (new_w, new_h), interpolation=cv2.INTER_AREA)
+    except Exception:
+        return img
 
 
 def compute_ssim_fast(original, enhanced, window_size=11):
@@ -90,6 +123,18 @@ def main():
             print(error_msg, file=sys.stderr)
             print(error_msg)
             sys.exit(1)
+
+        # Downscale large images to reduce memory usage (prevents OOM on Railway)
+        # Use same MAX_IMAGE_DIM as hybrid.py (default 1600)
+        max_dim_env = os.environ.get('MAX_IMAGE_DIM', '1600')
+        try:
+            max_dim = int(max_dim_env)
+        except ValueError:
+            max_dim = 1600
+        
+        if max_dim > 0:
+            a = maybe_downscale(a, max_dim)
+            b = maybe_downscale(b, max_dim)
 
         # Resize enhanced to original if sizes differ for fair comparison
         if a.shape != b.shape:
