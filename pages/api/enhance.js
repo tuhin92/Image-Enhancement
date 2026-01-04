@@ -155,15 +155,18 @@ export default async function handler(req, res) {
       try {
         const metricsScriptPath = path.join(process.cwd(), 'backend', 'metrics.py');
         console.log('Metrics script path:', metricsScriptPath);
+        console.log('Current working directory:', process.cwd());
         
         if (!fs.existsSync(metricsScriptPath)) {
-          console.warn('Metrics script not found at:', metricsScriptPath);
+          console.error('Metrics script not found at:', metricsScriptPath);
           throw new Error('Metrics script not found');
         }
 
         console.log('Calling metrics script...');
         console.log('Input path for metrics:', inputPath);
         console.log('Output path for metrics:', outputPath);
+        console.log('Input file exists:', fs.existsSync(inputPath));
+        console.log('Output file exists:', fs.existsSync(outputPath));
         console.log('Using Python command:', pythonCmd);
         
         const { stdout: metricsOut, stderr: metricsErr } = await execFileAsync(
@@ -171,10 +174,12 @@ export default async function handler(req, res) {
           ['-u', metricsScriptPath, inputPath, outputPath],
           { 
             timeout: 30000, 
-            maxBuffer: 5 * 1024 * 1024, 
+            maxBuffer: 5 * 1024 * 1024,
+            cwd: process.cwd(), // Explicitly set working directory
             env: {
               ...process.env,
               PYTHONUNBUFFERED: '1',
+              PYTHONIOENCODING: 'utf-8',
               OMP_NUM_THREADS: process.env.OMP_NUM_THREADS || '1',
               OPENBLAS_NUM_THREADS: process.env.OPENBLAS_NUM_THREADS || '1',
               MKL_NUM_THREADS: process.env.MKL_NUM_THREADS || '1',
@@ -184,9 +189,14 @@ export default async function handler(req, res) {
           }
         );
 
+        console.log('Metrics stdout length:', metricsOut ? metricsOut.length : 0);
         console.log('Metrics stdout:', metricsOut);
         if (metricsErr) {
-          console.error('Metrics stderr:', metricsErr);
+          console.warn('Metrics stderr (warnings may be present):', metricsErr);
+        }
+
+        if (!metricsOut || !metricsOut.trim()) {
+          throw new Error('Metrics script returned empty output');
         }
 
         try {
@@ -201,23 +211,44 @@ export default async function handler(req, res) {
           }
           
           metrics = JSON.parse(jsonStr);
-          console.log('Metrics parsed successfully:', metrics);
+          console.log('Metrics parsed successfully:', JSON.stringify(metrics));
           
           // Validate metrics structure - check if it's an error object
-          if (metrics.error) {
+          if (metrics && metrics.error) {
             console.error('Metrics script returned error:', metrics.error);
             throw new Error(`Metrics script returned error: ${metrics.error}`);
           }
           
-          // Validate required fields exist
-          if (typeof metrics.mse !== 'number' || typeof metrics.psnr !== 'number' || typeof metrics.ssim !== 'number') {
-            console.warn('Metrics structure incomplete - missing required fields:', metrics);
+          // Validate required fields exist and are valid numbers
+          if (!metrics || typeof metrics.mse !== 'number' || typeof metrics.psnr !== 'number' || typeof metrics.ssim !== 'number') {
+            console.error('Metrics structure incomplete - missing required fields:', metrics);
+            console.error('Metrics type:', typeof metrics);
+            console.error('MSE type:', typeof metrics?.mse);
+            console.error('PSNR type:', typeof metrics?.psnr);
+            console.error('SSIM type:', typeof metrics?.ssim);
             throw new Error('Metrics structure incomplete - missing required fields');
           }
+          
+          // Ensure all values are finite numbers
+          if (!isFinite(metrics.mse) || !isFinite(metrics.psnr) || !isFinite(metrics.ssim)) {
+            console.warn('Metrics contain non-finite values, attempting to fix...');
+            metrics.mse = isFinite(metrics.mse) ? metrics.mse : 0;
+            metrics.psnr = isFinite(metrics.psnr) ? metrics.psnr : 0;
+            metrics.ssim = isFinite(metrics.ssim) ? metrics.ssim : 0;
+          }
+          
+          console.log('Metrics validation passed:', {
+            mse: metrics.mse,
+            psnr: metrics.psnr,
+            ssim: metrics.ssim
+          });
+          
         } catch (parseErr) {
           console.error('Failed to parse metrics JSON:', parseErr);
-          console.error('Raw output was:', metricsOut);
-          console.error('Trimmed output was:', metricsOut.trim());
+          console.error('Parse error message:', parseErr.message);
+          console.error('Raw stdout was:', metricsOut);
+          console.error('Trimmed stdout was:', metricsOut.trim());
+          console.error('Stderr was:', metricsErr);
           throw parseErr;
         }
 
@@ -232,7 +263,8 @@ export default async function handler(req, res) {
         if (metricsError.stderr) {
           console.error('Metrics error stderr:', metricsError.stderr);
         }
-        // Continue without metrics (will be null)
+        // Continue without metrics (will be null) - don't fail the entire request
+        console.warn('Continuing without metrics due to calculation failure');
       }
 
       // Prepare JSON response with base64 image and metrics
@@ -241,6 +273,16 @@ export default async function handler(req, res) {
         mime: 'image/jpeg',
         metrics: metrics,
       };
+      
+      // Log metrics status for debugging
+      console.log('Final response metrics status:', metrics ? 'present' : 'null');
+      if (metrics) {
+        console.log('Final metrics values:', {
+          mse: metrics.mse,
+          psnr: metrics.psnr,
+          ssim: metrics.ssim
+        });
+      }
 
       // Clean up temporary files (optional)
       try {

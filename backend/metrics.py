@@ -72,38 +72,56 @@ def compute_ssim_fast(original, enhanced, window_size=11):
 
 
 def main():
-    if len(sys.argv) < 3:
-        print(json.dumps({"error": "Usage: metrics.py input.jpg output.jpg"}))
+    try:
+        if len(sys.argv) < 3:
+            error_msg = json.dumps({"error": "Usage: metrics.py input.jpg output.jpg"})
+            print(error_msg, file=sys.stderr)
+            print(error_msg)
+            sys.exit(1)
+
+        input_path = sys.argv[1]
+        output_path = sys.argv[2]
+
+        a = cv2.imread(input_path)
+        b = cv2.imread(output_path)
+
+        if a is None or b is None:
+            error_msg = json.dumps({"error": "Could not read one of the images"})
+            print(error_msg, file=sys.stderr)
+            print(error_msg)
+            sys.exit(1)
+
+        # Resize enhanced to original if sizes differ for fair comparison
+        if a.shape != b.shape:
+            try:
+                b = cv2.resize(b, (a.shape[1], a.shape[0]), interpolation=cv2.INTER_AREA)
+            except Exception as resize_err:
+                # Log resize error to stderr but continue
+                print(f"Warning: Resize failed: {resize_err}", file=sys.stderr)
+
+        mse = compute_mse(a, b)
+        psnr = compute_psnr(a, b)
+        ssim = compute_ssim_fast(a, b)
+
+        # Handle infinite PSNR
+        if not math.isfinite(psnr):
+            psnr = 100.0  # Set to a high value for identical images
+
+        out = {
+            "mse": mse,
+            "psnr": psnr,
+            "ssim": ssim
+        }
+
+        # Output JSON to stdout only (stderr can have warnings)
+        print(json.dumps(out))
+        sys.stdout.flush()
+        
+    except Exception as e:
+        error_msg = json.dumps({"error": f"Metrics calculation failed: {str(e)}"})
+        print(error_msg, file=sys.stderr)
+        print(error_msg)
         sys.exit(1)
-
-    input_path = sys.argv[1]
-    output_path = sys.argv[2]
-
-    a = cv2.imread(input_path)
-    b = cv2.imread(output_path)
-
-    if a is None or b is None:
-        print(json.dumps({"error": "Could not read one of the images"}))
-        sys.exit(1)
-
-    # Resize enhanced to original if sizes differ for fair comparison
-    if a.shape != b.shape:
-        try:
-            b = cv2.resize(b, (a.shape[1], a.shape[0]), interpolation=cv2.INTER_AREA)
-        except Exception:
-            pass
-
-    mse = compute_mse(a, b)
-    psnr = compute_psnr(a, b)
-    ssim = compute_ssim_fast(a, b)
-
-    out = {
-        "mse": mse,
-        "psnr": psnr,
-        "ssim": ssim
-    }
-
-    print(json.dumps(out))
 
 
 if __name__ == '__main__':
