@@ -162,10 +162,26 @@ export default async function handler(req, res) {
         }
 
         console.log('Calling metrics script...');
+        console.log('Input path for metrics:', inputPath);
+        console.log('Output path for metrics:', outputPath);
+        console.log('Using Python command:', pythonCmd);
+        
         const { stdout: metricsOut, stderr: metricsErr } = await execFileAsync(
           pythonCmd,
           ['-u', metricsScriptPath, inputPath, outputPath],
-          { timeout: 30000, maxBuffer: 5 * 1024 * 1024, env: { ...process.env } }
+          { 
+            timeout: 30000, 
+            maxBuffer: 5 * 1024 * 1024, 
+            env: {
+              ...process.env,
+              PYTHONUNBUFFERED: '1',
+              OMP_NUM_THREADS: process.env.OMP_NUM_THREADS || '1',
+              OPENBLAS_NUM_THREADS: process.env.OPENBLAS_NUM_THREADS || '1',
+              MKL_NUM_THREADS: process.env.MKL_NUM_THREADS || '1',
+              NUMEXPR_NUM_THREADS: process.env.NUMEXPR_NUM_THREADS || '1',
+              VECLIB_MAXIMUM_THREADS: process.env.VECLIB_MAXIMUM_THREADS || '1',
+            }
+          }
         );
 
         console.log('Metrics stdout:', metricsOut);
@@ -174,17 +190,48 @@ export default async function handler(req, res) {
         }
 
         try {
-          metrics = JSON.parse(metricsOut);
+          // Trim whitespace and try to extract JSON (in case there are warnings)
+          const trimmedOutput = metricsOut.trim();
+          
+          // Try to find JSON object in output (in case of warnings before JSON)
+          let jsonStr = trimmedOutput;
+          const jsonMatch = trimmedOutput.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            jsonStr = jsonMatch[0];
+          }
+          
+          metrics = JSON.parse(jsonStr);
           console.log('Metrics parsed successfully:', metrics);
+          
+          // Validate metrics structure - check if it's an error object
+          if (metrics.error) {
+            console.error('Metrics script returned error:', metrics.error);
+            throw new Error(`Metrics script returned error: ${metrics.error}`);
+          }
+          
+          // Validate required fields exist
+          if (typeof metrics.mse !== 'number' || typeof metrics.psnr !== 'number' || typeof metrics.ssim !== 'number') {
+            console.warn('Metrics structure incomplete - missing required fields:', metrics);
+            throw new Error('Metrics structure incomplete - missing required fields');
+          }
         } catch (parseErr) {
           console.error('Failed to parse metrics JSON:', parseErr);
           console.error('Raw output was:', metricsOut);
+          console.error('Trimmed output was:', metricsOut.trim());
           throw parseErr;
         }
 
       } catch (metricsError) {
         console.error('Metrics calculation failed:', metricsError);
         console.error('Metrics error details:', metricsError.message);
+        console.error('Metrics error code:', metricsError.code);
+        console.error('Metrics error signal:', metricsError.signal);
+        if (metricsError.stdout) {
+          console.error('Metrics error stdout:', metricsError.stdout);
+        }
+        if (metricsError.stderr) {
+          console.error('Metrics error stderr:', metricsError.stderr);
+        }
         // Continue without metrics (will be null)
       }
 
