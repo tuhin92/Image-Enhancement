@@ -125,6 +125,53 @@ export default function Home() {
     };
   };
 
+  const getOverallAssessment = (mse, psnr, ssim) => {
+    if (
+      typeof mse !== "number" ||
+      typeof psnr !== "number" ||
+      typeof ssim !== "number" ||
+      !isFinite(mse) ||
+      !isFinite(psnr) ||
+      !isFinite(ssim)
+    ) {
+      return null;
+    }
+
+    // Score each metric (1-4, higher = stronger enhancement)
+    let mseScore = 0;
+    if (mse > 6000) mseScore = 4;
+    else if (mse > 2000) mseScore = 3;
+    else if (mse > 500) mseScore = 2;
+    else mseScore = 1;
+
+    let psnrScore = 0;
+    if (psnr < 10) psnrScore = 4;
+    else if (psnr < 20) psnrScore = 3;
+    else if (psnr < 30) psnrScore = 2;
+    else psnrScore = 1;
+
+    let ssimScore = 0;
+    if (ssim < 0.3) ssimScore = 4;
+    else if (ssim < 0.5) ssimScore = 3;
+    else if (ssim < 0.8) ssimScore = 2;
+    else ssimScore = 1;
+
+    // Average score
+    const avgScore = (mseScore + psnrScore + ssimScore) / 3;
+
+    if (avgScore >= 3.5) {
+      return "Heavy enhancement applied with major modifications to brightness, contrast, and structure.";
+    } else if (avgScore >= 2.5) {
+      return "Strong enhancement typical for effective low-light correction with substantial improvements.";
+    } else if (avgScore >= 1.8) {
+      return "Moderate enhancement with balanced adjustments and natural-looking improvements.";
+    } else if (avgScore >= 1.2) {
+      return "Mild enhancement with subtle improvements while preserving most original characteristics.";
+    } else {
+      return "Minimal enhancement with very slight adjustments and high similarity to the original.";
+    }
+  };
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     handleFile(file);
@@ -876,6 +923,31 @@ export default function Home() {
                       <span className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
                         {getSsimInfo(metrics.ssim)?.desc}
                       </span>
+                    </div>
+                  </div>
+                  
+                  {/* Overall Assessment */}
+                  <div className={`mt-6 p-4 rounded-lg border-2 ${
+                    darkMode 
+                      ? "bg-gradient-to-r from-indigo-900/40 to-purple-900/40 border-indigo-500/50" 
+                      : "bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-300"
+                  }`}>
+                    <div className="flex items-start gap-3">
+                      <svg className="w-6 h-6 mt-0.5 flex-shrink-0 text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                      </svg>
+                      <div className="flex-1">
+                        <p className={`text-xs font-semibold uppercase tracking-wider mb-1.5 ${
+                          darkMode ? "text-indigo-300" : "text-indigo-700"
+                        }`}>
+                          Overall Assessment
+                        </p>
+                        <p className={`text-base font-medium leading-relaxed ${
+                          darkMode ? "text-gray-200" : "text-gray-800"
+                        }`}>
+                          {getOverallAssessment(metrics.mse, metrics.psnr, metrics.ssim)}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
