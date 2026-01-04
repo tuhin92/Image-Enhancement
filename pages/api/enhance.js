@@ -146,25 +146,66 @@ export default async function handler(req, res) {
 
       console.log('Enhanced image created successfully:', outputPath);
 
-      // Read and return the enhanced image
+      // Read enhanced image buffer
       const enhancedImageBuffer = fs.readFileSync(outputPath);
       console.log('Enhanced image buffer size:', enhancedImageBuffer.length);
-      
-      // Clean up temporary files
-      try {
-        // fs.unlinkSync(inputPath);
-        // fs.unlinkSync(outputPath);
-        console.log('Temporary files cleaned up');
-      } catch (cleanupError) {
-        console.error('Error cleaning up files:', cleanupError);
-      }
 
-      // Set response headers
-      res.setHeader('Content-Type', 'image/jpeg');
-      res.setHeader('Content-Disposition', 'inline; filename="enhanced-image.jpg"');
-      
-      console.log('Sending enhanced image to client');
-      res.status(200).send(enhancedImageBuffer);
+      // Compute metrics by calling backend/metrics.py (keeps hybrid.py unchanged)
+      try {
+        const metricsScriptPath = path.join(process.cwd(), 'backend', 'metrics.py');
+        console.log('Metrics script path:', metricsScriptPath);
+        if (!fs.existsSync(metricsScriptPath)) {
+          console.warn('Metrics script not found, skipping metrics calculation');
+        }
+
+        const { stdout: metricsOut, stderr: metricsErr } = await execFileAsync(
+          pythonCmd,
+          ['-u', metricsScriptPath, inputPath, outputPath],
+          { timeout: 30000, maxBuffer: 5 * 1024 * 1024, env: { ...process.env } }
+        );
+
+        if (metricsErr) {
+          console.error('Metrics stderr:', metricsErr);
+        }
+
+        let metrics = null;
+        try {
+          metrics = JSON.parse(metricsOut);
+        } catch (parseErr) {
+          console.error('Failed to parse metrics JSON:', parseErr, 'raw:', metricsOut);
+        }
+
+        // Prepare JSON response with base64 image and metrics
+        const responseJson = {
+          image: enhancedImageBuffer.toString('base64'),
+          mime: 'image/jpeg',
+          metrics: metrics,
+        };
+
+        // Clean up temporary files (optional)
+        try {
+          // fs.unlinkSync(inputPath);
+          // fs.unlinkSync(outputPath);
+          console.log('Temporary files cleaned up');
+        } catch (cleanupError) {
+          console.error('Error cleaning up files:', cleanupError);
+        }
+
+        res.setHeader('Content-Type', 'application/json');
+        return res.status(200).json(responseJson);
+
+      } catch (metricsError) {
+        console.error('Metrics calculation failed:', metricsError);
+        // Fall back to sending raw image if metrics step fails
+        try {
+          res.setHeader('Content-Type', 'image/jpeg');
+          res.setHeader('Content-Disposition', 'inline; filename="enhanced-image.jpg"');
+          return res.status(200).send(enhancedImageBuffer);
+        } catch (fallbackErr) {
+          console.error('Fallback send failed:', fallbackErr);
+          return res.status(500).json({ error: 'Failed to return enhanced image' });
+        }
+      }
 
     } catch (pythonError) {
       console.error('Python script error:', pythonError);

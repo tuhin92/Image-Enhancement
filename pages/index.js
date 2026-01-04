@@ -11,6 +11,7 @@ export default function Home() {
   const [fullscreenImage, setFullscreenImage] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [metrics, setMetrics] = useState(null);
   const fileInputRef = useRef(null);
 
   // Theme management
@@ -35,6 +36,93 @@ export default function Home() {
 
   const toggleTheme = () => {
     setDarkMode(!darkMode);
+  };
+
+  // --- Metric interpretation helpers (PSNR, SSIM, MSE) ---
+  const getPsnrInfo = (psnr) => {
+    if (typeof psnr !== "number" || !isFinite(psnr)) return null;
+    if (psnr > 30) {
+      return {
+        range: "> 30 dB",
+        desc:
+          "Very little change – enhancement is mild and very close to the input.",
+      };
+    }
+    if (psnr > 20) {
+      return {
+        range: "20 – 30 dB",
+        desc:
+          "Moderate changes – natural enhancement with only slight modification.",
+      };
+    }
+    if (psnr > 10) {
+      return {
+        range: "10 – 20 dB",
+        desc: "Strong enhancement – normal for low‑light correction.",
+      };
+    }
+    return {
+      range: "< 10 dB",
+      desc:
+        "Heavy modification – very strong adjustment of brightness and contrast.",
+    };
+  };
+
+  const getSsimInfo = (ssim) => {
+    if (typeof ssim !== "number" || !isFinite(ssim)) return null;
+    if (ssim >= 0.8) {
+      return {
+        range: "0.80 – 1.00",
+        desc:
+          "Very high structural similarity – enhancement is mild and close to the original.",
+      };
+    }
+    if (ssim >= 0.5) {
+      return {
+        range: "0.50 – 0.80",
+        desc:
+          "Moderate similarity – natural enhancement with some structure changes.",
+      };
+    }
+    if (ssim >= 0.3) {
+      return {
+        range: "0.30 – 0.50",
+        desc: "Noticeable structural change – common for illumination correction.",
+      };
+    }
+    return {
+      range: "< 0.30",
+      desc:
+        "Strong structural change – strong enhancement where textures are altered a lot.",
+    };
+  };
+
+  const getMseInfo = (mse) => {
+    if (typeof mse !== "number" || !isFinite(mse)) return null;
+    if (mse <= 500) {
+      return {
+        range: "0 – 500",
+        desc: "Almost identical – hardly any enhancement applied.",
+      };
+    }
+    if (mse <= 2000) {
+      return {
+        range: "500 – 2000",
+        desc: "Moderate pixel difference – mild enhancement.",
+      };
+    }
+    if (mse <= 6000) {
+      return {
+        range: "2000 – 6000",
+        desc:
+          "Strong pixel‑level change – typical for effective low‑light enhancement.",
+      };
+    }
+    return {
+      range: "> 6000",
+      desc:
+        "Heavy pixel difference – very strong brightening or color changes.",
+    };
   };
 
   const handleFileChange = (e) => {
@@ -116,11 +204,12 @@ export default function Home() {
         );
       }
 
-      const blob = await response.blob();
-      console.log("Received blob:", blob);
-      const enhancedImageUrl = URL.createObjectURL(blob);
-      console.log("Created enhanced image URL:", enhancedImageUrl);
+      // Expect JSON { image: base64, mime: 'image/jpeg', metrics: { mse, psnr, ssim } }
+      const json = await response.json();
+      console.log('Received JSON response with metrics:', json.metrics);
+      const enhancedImageUrl = `data:${json.mime};base64,${json.image}`;
       setEnhancedImage(enhancedImageUrl);
+      setMetrics(json.metrics || null);
     } catch (err) {
       console.error("Error enhancing image:", err);
       setError(`Failed to enhance image: ${err.message}`);
@@ -133,6 +222,7 @@ export default function Home() {
     setOriginalImage(null);
     setEnhancedImage(null);
     setSelectedFile(null);
+    setMetrics(null);
     setError("");
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -760,6 +850,36 @@ export default function Home() {
                   )}
                 </div>
               </div>
+
+              {/* Metrics Matrix - Full Width */}
+              {metrics ? (
+                <div className="mb-6 sm:mb-8 p-5 sm:p-6 rounded-xl border bg-white/60 dark:bg-gray-800/60 shadow-lg">
+                  <h5 className="text-base sm:text-lg font-bold mb-4 text-gray-700 dark:text-gray-200">Result Metrics</h5>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+                    <div className="flex flex-col p-4 rounded-lg bg-white/80 dark:bg-gray-900/50">
+                      <span className="font-semibold text-gray-500 dark:text-gray-400 mb-1">MSE</span>
+                      <span className="text-2xl font-bold text-gray-800 dark:text-white mb-2">{metrics.mse?.toFixed ? metrics.mse.toFixed(3) : String(metrics.mse)}</span>
+                      <span className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                        {getMseInfo(metrics.mse)?.desc}
+                      </span>
+                    </div>
+                    <div className="flex flex-col p-4 rounded-lg bg-white/80 dark:bg-gray-900/50">
+                      <span className="font-semibold text-gray-500 dark:text-gray-400 mb-1">PSNR</span>
+                      <span className="text-2xl font-bold text-gray-800 dark:text-white mb-2">{metrics.psnr?.toFixed ? metrics.psnr.toFixed(2) : String(metrics.psnr)} dB</span>
+                      <span className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                        {getPsnrInfo(metrics.psnr)?.desc}
+                      </span>
+                    </div>
+                    <div className="flex flex-col p-4 rounded-lg bg-white/80 dark:bg-gray-900/50">
+                      <span className="font-semibold text-gray-500 dark:text-gray-400 mb-1">SSIM</span>
+                      <span className="text-2xl font-bold text-gray-800 dark:text-white mb-2">{metrics.ssim?.toFixed ? metrics.ssim.toFixed(4) : String(metrics.ssim)}</span>
+                      <span className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                        {getSsimInfo(metrics.ssim)?.desc}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
 
               {/* Action Buttons - Inside Compare Results Box */}
               <div className="text-center pt-4">
